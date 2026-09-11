@@ -1,0 +1,38 @@
+char_01.png <- 개조인간 이승우 - RARE.png
+char_02.png <- 괴수 10호 이승우- SSS.png
+char_03.png <- 그림자 군주 승우 lv1 - epic.png
+char_04.png <- 김준성 - X.png
+char_05.png <- 네온시티 이승우 - EPIC.png
+char_06.png <- 단단한 고기 방패 최예강 - SS.png
+char_07.png <- 담배빨이 금성제 - Legendary.png
+char_08.png <- 면상치워 김지홍 - S.png
+char_09.png <- 무에타이 승우 - uncommon.png
+char_10.png <- 무의식 승우 - RARE.png
+char_11.png <- 복싱글러브를 구매한 승우 - UNCOMMON.png
+char_12.png <- 불멸의 박상욱 - GOD.png
+char_13.png <- 불멸의 이승우 - GOD.png
+char_14.png <- 불멸의 최예강 - GOD.png
+char_15.png <- 브레인롯 븅신 - EPIC.png
+char_16.png <- 성추행 후 체포된 승우 - COMMON.png
+char_17.png <- 스트릿 파이터 이승우 - UNCOMMON.png
+char_18.png <- 신 이승우 - X.png
+char_19.png <- 신각자 최예강 - SSS.png
+char_20.png <- 신인류 최예강 - SS.png
+char_21.png <- 아라하시 타비 - RARE.png
+char_22.png <- 야마자키파 이승우 - RARE.png
+char_23.png <- 얍삽한 놈 김주완 - SS.png
+char_24.png <- 여자 화장실 염탐하는 이승우 - COMMON.png
+char_25.png <- 월광검 김준구 SSS.png
+char_26.png <- 육성제 - S.png
+char_27.png <- 전과 8범 짖굿은 장난 꾸러기 존 존스 - X.png
+char_28.png <- 전왕 김준성 - GOD.png
+char_29.png <- 주지태 - X.png
+char_30.png <- 죽음의 군주 이승우 - SSS.png
+char_31.png <- 짖굿은 장난꾸러기 이현도 - SSS+.png
+char_32.png <- 초월자 김주완 - X.png
+char_33.png <- 초월자 박상욱 - X.png
+char_34.png <- 초월자 이승우 - X.png
+char_35.png <- 초월자 최예강 - X.png
+char_36.png <- 파이터 이승우 - common.png
+char_37.png <- 한심한 이승우 - C.png
+char_38.png <- 후야 - RARE.png
