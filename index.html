@@ -1107,7 +1107,7 @@ function maybeTriggerPassiveOnEntry(c){
   if(c.id==='immortalSeungwoo' && getBattleAtk(enemyCard)>getBattleAtk(c)) playerHp=Math.min(playerBattleMaxHp,playerHp+2000);
 }
 function setupBattle(){
-  bossMode=false; godBossMode=false; jonggunBossMode=false; jonggunPage=0;
+  bossMode=false; godBossMode=false; jonggunBossMode=false; junGuBossMode=false; jonggunPage=0;
   const owned=cards.filter(c=>c.rarity!=='SECRET'&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
   if(!owned.length){alert('사용 가능한 캐릭터가 없습니다. HP를 회복하거나 다른 캐릭터를 획득하세요.');go('collection');return;}
   if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
