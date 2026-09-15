@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>승우 아레나</title>
+<style>
+:root{
+  --bg:#080b14;
+  --panel:#101626;
+  --panel2:#151d31;
+  --text:#eef2ff;
+  --muted:#99a4c1;
+  --line:rgba(255,255,255,.09);
+  --accent:#7c5cff;
+  --accent2:#39c6ff;
+  --good:#45e6a7;
+  --bad:#ff5974;
+  --gold:#ffd76b;
+  --shadow:0 24px 80px rgba(0,0,0,.38);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;background:radial-gradient(circle at 20% 0%,rgba(124,92,255,.18),transparent 28%),radial-gradient(circle at 100% 100%,rgba(57,198,255,.12),transparent 26%),var(--bg);color:var(--text);font-family:Inter,Pretendard,"Noto Sans KR",Arial,sans-serif}
+body{display:flex;justify-content:center;align-items:center;overflow:hidden}
+button,input{font:inherit}
+button{border:0}
+.app{width:min(1120px,100vw);height:min(780px,100dvh);display:grid;grid-template-columns:250px 1fr;background:rgba(11,15,28,.92);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden;backdrop-filter:blur(18px)}
+.sidebar{padding:22px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.logo{padding:8px 10px 18px;cursor:pointer;user-select:none}.logo h1{margin:0;font-size:26px;letter-spacing:-1.3px}.logo p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.nav{display:flex;flex-direction:column;gap:7px}.nav button{padding:12px 13px;border-radius:12px;background:transparent;color:#b5bfd7;text-align:left;cursor:pointer;font-weight:800;transition:.18s}.nav button:hover{background:rgba(255,255,255,.05);color:#fff}.nav button.active{background:linear-gradient(135deg,rgba(124,92,255,.22),rgba(57,198,255,.09));color:#fff;border:1px solid rgba(124,92,255,.23)}
+.side-stats{margin-top:auto;padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}.side-stats .row{display:flex;justify-content:space-between;align-items:center;margin:7px 0;font-size:13px}.side-stats .row span{color:var(--muted)}
+.main{position:relative;min-width:0;overflow:hidden}.topbar{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid var(--line)}.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 14px rgba(69,230,167,.7)}.actions{display:flex;gap:8px}.chip{padding:8px 11px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.03);color:#dce3fb;font-size:12px;font-weight:800}
+.view{height:calc(100% - 68px);overflow:auto;padding:22px}.view::-webkit-scrollbar{width:8px}.view::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:20px}
+.screen{display:none}.screen.active{display:block;animation:in .35s cubic-bezier(.22,1,.36,1)}@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;min-height:250px}.panel{background:linear-gradient(145deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 15px 45px rgba(0,0,0,.16)}.hero-copy{display:flex;flex-direction:column;justify-content:center}.eyebrow{color:#9f9aff;font-size:11px;letter-spacing:1.2px;font-weight:900;text-transform:uppercase}.hero h2{margin:8px 0 10px;font-size:36px;line-height:1.05;letter-spacing:-2px}.hero p{margin:0;color:#a8b2cc;line-height:1.7;font-size:14px}.hero-art{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}.hero-art::before{content:"";position:absolute;inset:20px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,255,.28),transparent 65%);filter:blur(12px)}.hero-art img{position:relative;height:220px;max-width:92%;object-fit:contain;filter:drop-shadow(0 20px 35px rgba(0,0,0,.42));transition:.3s}.hero-art:hover img{transform:translateY(-5px) scale(1.02)}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{padding:12px 15px;border-radius:12px;background:#1a233b;color:#f3f5ff;border:1px solid var(--line);cursor:pointer;font-weight:900;transition:.16s}.btn:hover{transform:translateY(-2px);background:#202b48}.btn.primary{background:linear-gradient(135deg,#7257ff,#4d8cff);box-shadow:0 10px 26px rgba(99,80,255,.28)}.btn.primary:hover{filter:brightness(1.06)}.btn.danger{background:rgba(255,89,116,.08);color:#ff8da0;border-color:rgba(255,89,116,.16)}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin:22px 2px 11px}.section-head h3{margin:0;font-size:18px}.section-head p{margin:0;color:var(--muted);font-size:12px}
+.card-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.card{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#11182a;cursor:pointer;transition:.18s}.card:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.16);box-shadow:0 16px 32px rgba(0,0,0,.25)}.card .img{aspect-ratio:3/4;background:#0c1120;overflow:hidden}.card img{width:100%;height:100%;object-fit:cover;display:block}.card .meta{padding:9px 10px}.card .name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .rarity{font-size:10px;font-weight:900;margin-top:4px;letter-spacing:.5px}.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;font-size:9px;font-weight:900;background:rgba(255,255,255,.07)}
+.r-C{color:#bbc2d0}.r-COMMON{color:#d5dae5}.r-UNCOMMON{color:#72e6a8}.r-RARE{color:#61a6ff}.r-EPIC{color:#c28cff}.r-Legendary{color:#ffd76b}.r-SS{color:#ff9fc1}.r-SSS{color:#ff80e9}.r-SSSplus{color:#fff08a}.r-X{color:#ff5f7f}.r-SECRET{color:#7cf9ff}
+.card.big{display:grid;grid-template-columns:160px 1fr;gap:16px;padding:13px;cursor:default}.card.big:hover{transform:none;box-shadow:none}.card.big .img{border-radius:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{padding:9px;background:rgba(255,255,255,.035);border-radius:10px;text-align:center}.stat b{display:block;font-size:15px}.stat span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.detail-title{font-size:22px;font-weight:950;letter-spacing:-1px}.detail-sub{color:var(--muted);font-size:12px;margin-top:3px}.trait{margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:10px;background:rgba(124,92,255,.06);font-size:12px;line-height:1.55}.skills{display:grid;gap:8px;margin-top:11px}.skill{display:flex;align-items:center;gap:10px;padding:9px;border-radius:10px;background:rgba(255,255,255,.035)}.skill .ico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(124,92,255,.14)}.skill b{font-size:12px}.skill span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.gacha-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}.gacha-machine{min-height:460px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}.orb{position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,255,.34),rgba(124,92,255,.05) 55%,transparent 70%);filter:blur(8px);animation:pulse 2.2s ease-in-out infinite}.machine-card{position:relative;width:min(240px,70%);aspect-ratio:3/4;border-radius:20px;overflow:hidden;background:#0c1120;border:1px solid rgba(255,255,255,.12);box-shadow:0 25px 60px rgba(0,0,0,.35);display:grid;place-items:center}.machine-card .back{font-size:42px;font-weight:1000;letter-spacing:-2px;color:#dfe5ff;z-index:1}.machine-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(.92);transition:.4s}.machine-card.reveal img{opacity:1;transform:scale(1)}.machine-card.reveal .back{opacity:0}.gacha-label{margin-top:14px;text-align:center}.gacha-label b{font-size:22px}.gacha-label p{margin:6px 0 0;color:var(--muted);font-size:12px}.gacha-results-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px;max-height:58vh;overflow:auto;padding:4px}.gacha-results-grid .card{min-width:0}.gacha-results-grid .meta{padding:6px 7px}.gacha-results-grid .name{font-size:10px}.gacha-results-grid .rarity{font-size:8px}.gacha-results-grid::-webkit-scrollbar{width:7px}.gacha-results-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.09);border-radius:9px}.rates{display:grid;gap:8px}.rate{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.035)}.rate span{color:var(--muted);font-size:12px}.rate b{font-size:13px}
+.battle-selector-panel{margin-bottom:14px;padding:14px}.battle-selector-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:10px}.battle-selector-head b{font-size:14px}.battle-selector-head span{color:var(--muted);font-size:11px}.battle-character-grid{display:grid;grid-template-columns:repeat(6,minmax(105px,1fr));gap:9px;overflow-x:auto;padding-bottom:2px}.battle-character{position:relative;min-width:105px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0d1424;color:#fff;cursor:pointer;text-align:left;transition:.16s}.battle-character:hover{transform:translateY(-2px);border-color:rgba(124,92,255,.4);background:#131d33}.battle-character.active{border-color:rgba(69,230,167,.55);box-shadow:0 0 0 1px rgba(69,230,167,.18),0 10px 24px rgba(0,0,0,.22)}.battle-character.disabled{opacity:.42;cursor:not-allowed;filter:saturate(.55)}.battle-character img{width:100%;aspect-ratio:4/4.6;display:block;object-fit:cover;background:#0a0f1b}.battle-character .bc-meta{padding:8px}.battle-character .bc-name{font-size:10px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.battle-character .bc-rarity{font-size:9px;font-weight:900;margin-top:3px}.battle-character .bc-hp{font-size:9px;color:var(--muted);margin-top:4px}.battle-character .bc-check{position:absolute;top:7px;right:7px;padding:3px 5px;border-radius:999px;background:rgba(69,230,167,.16);color:#72e6a8;font-size:8px;font-weight:900}.battle-character-grid::-webkit-scrollbar{height:6px}.battle-character-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:999px}.switch-box{margin-top:12px;padding:12px;border:1px solid rgba(255,89,116,.18);border-radius:12px;background:rgba(255,89,116,.055)}.switch-box b{font-size:13px}.switch-box p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.5}.switch-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.switch-btn{padding:9px;border-radius:10px;background:#18213a;border:1px solid var(--line);color:#fff;cursor:pointer;text-align:left}.switch-btn:hover{background:#202b48;border-color:rgba(255,255,255,.16)}.switch-btn img{width:34px;height:34px;border-radius:8px;object-fit:cover;vertical-align:middle;margin-right:7px}.switch-btn .sb-name{font-size:10px;font-weight:900}.switch-btn .sb-hp{display:block;color:var(--muted);font-size:9px;margin-top:2px}.battle{display:grid;grid-template-columns:1fr 80px 1fr;gap:14px;align-items:stretch}.fighter{min-height:470px;display:flex;flex-direction:column}.fighter.enemy{border-color:rgba(255,89,116,.15)}.fighter-head{display:flex;justify-content:space-between;align-items:center}.fighter-name{font-weight:950;font-size:18px}.hp-wrap{margin-top:10px}.hp-top{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}.hpbar{height:11px;border-radius:999px;background:#252d43;overflow:hidden}.hpfill{height:100%;width:100%;background:linear-gradient(90deg,#45e6a7,#6de2ff);transition:.45s}.enemy .hpfill{background:linear-gradient(90deg,#ff7087,#ffb36d)}.portrait{margin-top:12px;flex:0 0 330px;height:330px;border-radius:15px;overflow:hidden;background:#0c1120;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:8px}.portrait img{width:100%;height:100%;object-fit:contain;display:block}.skills-battle{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.skill-btn{padding:10px;border-radius:10px;background:#1a233b;border:1px solid var(--line);color:#fff;cursor:pointer;font-size:11px;font-weight:900}.skill-btn:disabled{opacity:.35;cursor:not-allowed}.center-battle{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.vs{font-size:30px;font-weight:1000;color:#c6cff3}.turn{padding:8px 9px;border-radius:10px;background:rgba(124,92,255,.11);color:#cbbfff;font-size:10px;font-weight:900;text-align:center}.log{height:120px;overflow:auto;margin-top:12px;padding:10px;border-radius:12px;background:rgba(0,0,0,.18);border:1px solid var(--line);font-size:11px;line-height:1.6;color:#c5cee6}
+.battle,.battle-selector-panel{contain:layout paint}.fighter{contain:layout paint}.card-grid,.gacha-results-grid,.weapon-results-grid{contain:content}.log{contain:content}.log::-webkit-scrollbar{width:5px}.log::-webkit-scrollbar-thumb{background:rgba(255,255,255,.09);border-radius:9px}
+.modal-wrap{position:fixed;inset:0;background:rgba(3,5,11,.72);display:none;place-items:center;z-index:30;padding:18px;backdrop-filter:blur(10px)}.modal-wrap.show{display:grid}.modal{width:min(760px,100%);max-height:92dvh;overflow:auto;border-radius:24px;background:#0e1423;border:1px solid rgba(255,255,255,.11);box-shadow:0 35px 100px rgba(0,0,0,.5);padding:20px;position:relative}.close{position:absolute;right:16px;top:16px;z-index:100;width:48px;height:48px;padding:0;display:grid;place-items:center;background:#20283d;color:#fff;border:2px solid rgba(255,255,255,.28);border-radius:50%;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);transition:transform .15s ease,background .15s ease,box-shadow .15s ease}.close::before,.close::after{content:"";position:absolute;width:21px;height:3px;border-radius:999px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.35)}.close::before{transform:rotate(45deg)}.close::after{transform:rotate(-45deg)}.close:hover{transform:scale(1.1) rotate(3deg);background:#2d3856;box-shadow:0 10px 28px rgba(0,0,0,.55),0 0 16px rgba(124,92,255,.25)}
+.weapon-reveal-wrap{text-align:center;padding:28px 18px 24px}.weapon-reveal-rarity{font-size:14px;font-weight:1000;letter-spacing:3px}.weapon-reveal-name{font-size:31px;font-weight:1000;letter-spacing:-1.4px;margin:7px 0 12px}.weapon-reveal-card{width:min(320px,78vw);min-height:250px;margin:0 auto;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.15);background:radial-gradient(circle at 50% 35%,rgba(124,92,255,.28),rgba(12,17,32,.95) 62%);box-shadow:0 25px 80px rgba(0,0,0,.42);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px}.weapon-reveal-icon{font-size:72px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.35));margin-bottom:8px}.weapon-reveal-bonus{font-size:16px;font-weight:900;line-height:1.65}.weapon-reveal-desc{margin-top:8px;color:var(--muted);font-size:11px;line-height:1.55}.weapon-reveal-card.UR{box-shadow:0 0 70px rgba(124,92,255,.35),0 25px 80px rgba(0,0,0,.5)}.weapon-reveal-card.X{box-shadow:0 0 80px rgba(255,95,127,.35),0 25px 80px rgba(0,0,0,.5)}.weapon-results-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-height:58vh;overflow:auto;padding:4px}.weapon-result-tile{border:1px solid var(--line);border-radius:14px;background:#11182a;padding:9px;text-align:center}.weapon-result-tile .ico{font-size:28px}.weapon-result-tile .nm{font-size:10px;font-weight:900;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.weapon-result-tile .rr{font-size:8px;font-weight:900;margin-top:3px}.weapon-result-tile .ef{font-size:8px;color:var(--muted);margin-top:4px;line-height:1.35}.weapon-result-count{margin-top:6px;font-size:9px;color:var(--muted)}
+@media(max-width:600px){.weapon-results-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.weapon-reveal-name{font-size:25px}}
+
+.reveal-modal{text-align:center;padding:34px}.reveal-rarity{font-size:15px;font-weight:1000;letter-spacing:3px}.reveal-name{font-size:32px;font-weight:1000;letter-spacing:-1.6px;margin:6px 0 15px}.reveal-card{width:min(310px,75vw);aspect-ratio:3/4;margin:0 auto;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:0 25px 80px rgba(0,0,0,.42)}.reveal-card img{width:100%;height:100%;object-fit:cover}.reveal-card.UR{box-shadow:0 0 65px rgba(124,92,255,.42),0 25px 80px rgba(0,0,0,.5)}.reveal-card.SECRET{box-shadow:0 0 80px rgba(124,249,255,.42),0 25px 80px rgba(0,0,0,.5)}
+.particle{position:fixed;width:7px;height:7px;border-radius:50%;background:#fff;z-index:31;pointer-events:none;animation:fly 1.2s ease-out forwards}@keyframes fly{to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}}@keyframes pulse{0%,100%{transform:scale(.94);opacity:.75}50%{transform:scale(1.07);opacity:1}}
+.collection-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.filter{padding:9px 11px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:#cbd4ed;cursor:pointer;font-size:11px;font-weight:800}.filter.active{background:rgba(124,92,255,.16);color:#fff;border-color:rgba(124,92,255,.3)}
+.empty{padding:32px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+.heal-box{margin-top:10px;padding:10px 11px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+.hp-state{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-bottom:6px}
+.hp-state b{color:#eef2ff}
+.quest-grid{display:grid;gap:10px}
+.quest{display:flex;align-items:center;gap:10px;padding:11px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.quest .qicon{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:rgba(124,92,255,.12)}
+.quest .qbody{flex:1;min-width:0}
+.quest .qbody b{font-size:12px}
+.quest .qbody span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.quest.done{border-color:rgba(69,230,167,.25);background:rgba(69,230,167,.055)}
+.boss-lock{opacity:.6}
+.special-text{font-size:28px;font-weight:1000;letter-spacing:2px;margin:8px 0 16px;text-shadow:0 0 22px currentColor}
+
+.level-box{margin-top:10px;padding:10px 11px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.03)}
+.level-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);margin-bottom:6px}
+.level-top b{color:#eef2ff;font-size:12px}
+.xpbar{height:7px;border-radius:999px;background:#252d43;overflow:hidden}
+.xpfill{height:100%;width:0;background:linear-gradient(90deg,#7c5cff,#39c6ff);transition:width .35s ease}
+.select-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn.selected{background:rgba(69,230,167,.12);border-color:rgba(69,230,167,.3);color:#72e6a8}
+.btn:disabled,.skill-btn:disabled{opacity:.42;cursor:not-allowed;transform:none!important}
+.locked-skill{filter:saturate(.55)}
+.selected-badge{display:inline-flex;margin-top:6px;padding:4px 7px;border-radius:999px;background:rgba(69,230,167,.11);color:#72e6a8;font-size:9px;font-weight:900}
+.battle-level{font-size:10px;color:#9ea9c5;margin-top:3px}
+
+
+.shop-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.shop-item,.inventory-item{padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}.shop-item h4,.inventory-item h4{margin:0 0 6px;font-size:14px}.shop-item p,.inventory-item p{margin:5px 0;color:var(--muted);font-size:11px;line-height:1.5}.weapon-list{display:grid;gap:8px;margin-top:10px}.weapon-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}.weapon-main{min-width:0}.weapon-main b{font-size:12px}.weapon-main span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.weapon-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.weapon-badge{display:inline-flex;padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.07);font-size:9px;font-weight:900}.small-note{color:var(--muted);font-size:10px;line-height:1.5}.loot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.weapon-level{color:var(--gold);font-weight:900}
+@media(max-width:900px){.app{grid-template-columns:86px 1fr}.logo h1{font-size:0}.logo h1::after{content:"SA";font-size:22px}.logo p{display:none}.nav button{font-size:0;text-align:center}.nav button::before{content:"•";font-size:20px}.side-stats{padding:10px}.side-stats .row{display:block;text-align:center}.side-stats .row span{display:none}.side-stats .row b{font-size:12px}.hero{grid-template-columns:1fr}.hero-art{min-height:220px}.card-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.battle{grid-template-columns:1fr}.center-battle{order:2;flex-direction:row}.fighter.enemy{order:1}.fighter.player{order:3}.gacha-layout{grid-template-columns:1fr}}
+
+@media(max-width:600px){.collection-tools{margin-bottom:12px}.section-head .buttons .btn{font-size:10px;padding:9px 10px}}
+@media(max-width:600px){.gacha-results-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.gacha-results-grid .name{font-size:9px}.gacha-results-grid .rarity{font-size:8px}body{align-items:stretch}.app{width:100%;height:100dvh;border-radius:0;grid-template-columns:1fr}.battle-character-grid{grid-template-columns:repeat(4,105px)}.battle-selector-head{align-items:flex-start;flex-direction:column;gap:4px}.sidebar{position:fixed;bottom:0;left:0;right:0;height:64px;z-index:20;padding:7px 10px;display:block;background:rgba(10,14,25,.95);border-right:0;border-top:1px solid var(--line)}.logo,.side-stats{display:none}.nav{display:grid;grid-template-columns:repeat(9,1fr);height:100%}.nav button{display:flex;justify-content:center;align-items:center;font-size:0;padding:0;border-radius:10px}.nav button::before{content:"";font-size:0}.nav button:nth-child(1)::after{content:"⌂";font-size:20px}.nav button:nth-child(2)::after{content:"🎰";font-size:18px}.nav button:nth-child(3)::after{content:"▦";font-size:20px}.nav button:nth-child(4)::after{content:"⚔";font-size:20px}.nav button:nth-child(5)::after{content:"★";font-size:20px}.nav button:nth-child(6)::after{content:"🎁";font-size:18px}.nav button:nth-child(7)::after{content:"🛒";font-size:18px}.nav button:nth-child(8)::after{content:"🎒";font-size:18px}.nav button:nth-child(9)::after{content:"🔐";font-size:18px}.main{padding-bottom:64px}.topbar{height:58px;padding:0 14px}.view{height:calc(100% - 58px);padding:14px}.hero h2{font-size:31px}.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card.big{grid-template-columns:1fr}.skills{grid-template-columns:1fr 1fr}.battle{gap:10px}.fighter{min-height:360px}.portrait{flex-basis:250px;height:250px;min-height:250px}.skills-battle{grid-template-columns:1fr 1fr 1fr}.vs{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo" id="devLogo"><h1>승우 아레나</h1><p>SUMMON · AWAKEN · BATTLE</p></div>
+    <nav class="nav">
+      <button class="active" data-screen="home">홈</button>
+      <button data-screen="gacha">뽑기</button>
+      <button data-screen="collection">도감</button>
+      <button data-screen="battle">배틀</button>
+      <button data-screen="awakening">각성</button>
+      <button data-screen="rewards">보상</button>
+      <button data-screen="shop">상점</button>
+      <button data-screen="inventory">인벤</button>
+      <button data-screen="code">코드</button>
+    </nav>
+    <div class="side-stats">
+      <div class="row"><span>코인</span><b id="coinSide">5,000</b></div>
+      <div class="row"><span>보유</span><b id="ownedSide">0</b></div>
+      <div class="row"><span>각성</span><b id="awakeningSide">0</b></div>
+      <div class="row"><span>사용</span><b id="selectedSide">없음</b></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="status"><span class="dot"></span><span id="pageTitle">승우 아레나</span></div>
+      <div class="actions"><div class="chip">💰 <span id="coinTop">5,000</span></div><div class="chip">🃏 <span id="ownedTop">0</span></div></div>
+    </header>
+
+    <section class="view">
+      <!-- HOME -->
+      <div class="screen active" id="screen-home">
+        <div class="hero">
+          <div class="panel hero-copy">
+            <div class="eyebrow">SUMMON · AWAKEN · BATTLE</div>
+            <h2>승우를 뽑고,<br>각성시키고, 싸워라.</h2>
+            <p>카드를 모아 스킬을 강화하고, 특성을 활용해서 상대 승우보다 먼저 HP를 0으로 만들어라.</p>
+            <div class="buttons"><button class="btn primary" onclick="go('gacha')">🎰 승우 뽑기</button><button class="btn" onclick="go('battle')">⚔ 배틀 시작</button></div>
+          </div>
+          <div class="panel hero-art"><img decoding="async" src="assets/char_03.png" alt="대표 승우"></div>
+        </div>
+        <div class="section-head"><div><h3>추천 카드</h3><p>현재 게임에 등록된 일부 카드</p></div></div>
+        <div class="card-grid" id="featuredGrid"></div>
+      </div>
+
+      <!-- GACHA -->
+      <div class="screen" id="screen-gacha">
+        <div class="gacha-layout">
+          <div class="panel gacha-machine">
+            <div class="orb"></div>
+            <div class="machine-card" id="machineCard"><div class="back">SW</div><img decoding="async" id="machineImg" alt="뽑기 결과"></div>
+            <div class="gacha-label"><b id="gachaMessage">승우를 소환하세요</b><p>1회 100 코인 · 10회 900 코인 · 100회 8,000 코인 · 1000회 80,000 코인</p></div>
+            <div class="buttons"><button class="btn primary" onclick="pull(1)">1회 뽑기</button><button class="btn" onclick="pull(10)">10회 뽑기</button><button class="btn" onclick="pull(100)">💥 100회 뽑기</button><button class="btn" onclick="pull(1000)">💥 1000회 뽑기</button></div>
+          </div>
+          <div class="panel">
+            <div class="section-head" style="margin-top:0"><div><h3>소환 확률</h3><p>X는 0.3%, GOD와 SECRET은 일반 뽑기에서 등장하지 않습니다.</p></div></div>
+            <div class="rates">
+              <div class="rate"><span>C / COMMON</span><b class="r-C">37.7%</b></div>
+              <div class="rate"><span>UNCOMMON</span><b class="r-UNCOMMON">24%</b></div>
+              <div class="rate"><span>RARE</span><b class="r-RARE">18%</b></div>
+              <div class="rate"><span>EPIC</span><b class="r-EPIC">10%</b></div>
+              <div class="rate"><span>SS / S / LEGENDARY</span><b class="r-Legendary">7%</b></div>
+              <div class="rate"><span>SSS / SSS+</span><b class="r-SSS">3%</b></div>
+              <div class="rate"><span>X</span><b class="r-X">0.3%</b></div>
+              <div class="rate"><span>SECRET</span><b class="r-SECRET">개발자 전용</b></div>
+            </div>
+            <div class="trait" style="margin-top:15px"><b>💡 TIP</b><br>중복 카드는 자동으로 조각이 쌓입니다. 같은 카드를 3장 모으면 각성할 수 있습니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLECTION -->
+      <div class="screen" id="screen-collection">
+        <div class="section-head" style="margin-top:0">
+          <div><h3>승우 도감</h3><p id="collectionCount">0 / 25 수집</p></div>
+          <div class="buttons" style="margin-top:0;justify-content:flex-end">
+            <button class="btn primary" type="button" onclick="healAllCharacters()">❤️ 전체 회복 · 3,000 / 캐릭터</button>
+          </div>
+        </div>
+        <div class="collection-tools" id="filters"></div>
+        <div class="card-grid" id="collectionGrid"></div>
+      </div>
+
+      <!-- BATTLE -->
+      <div class="screen" id="screen-battle">
+        <div class="section-head" style="margin-top:0"><div><h3>1 : 1 배틀</h3><p id="battleHint">아래에서 사용할 캐릭터를 바로 선택할 수 있습니다.</p></div><button class="btn" onclick="setupBattle()">새 상대</button></div>
+        <div class="panel battle-selector-panel">
+          <div class="battle-selector-head"><b>⚔️ 내 캐릭터 선택</b><span id="battleSelectedName">선택된 캐릭터 없음</span></div>
+          <div class="battle-character-grid" id="battleCharacterGrid"></div>
+        </div>
+        <div class="battle">
+          <div class="panel fighter player" id="playerFighter"></div>
+          <div class="center-battle"><div class="turn" id="turnInfo">내 턴</div><div class="vs">VS</div></div>
+          <div class="panel fighter enemy" id="enemyFighter"></div>
+        </div>
+        <div class="panel log" id="battleLog"></div>
+      </div>
+
+      <!-- AWAKENING -->
+      <div class="screen" id="screen-awakening">
+        <div class="section-head" style="margin-top:0"><div><h3>각성 연구소</h3><p>중복 3장을 모은 카드만 각성 가능</p></div></div>
+        <div id="awakeningContent"></div>
+      </div>
+
+      <!-- REWARDS -->
+      <div class="screen" id="screen-rewards">
+        <div class="section-head" style="margin-top:0"><div><h3>보상 센터</h3><p>일일보상 · 업적 · 특별 퀘스트 · 보스전</p></div></div>
+
+        <div class="gacha-layout">
+          <div class="panel">
+            <div class="section-head" style="margin-top:0"><div><h3>🎁 일일보상</h3><p>하루에 한 번 받을 수 있습니다.</p></div></div>
+            <div class="trait"><b>오늘의 보상</b><br><span style="font-size:24px;font-weight:1000;color:var(--gold)">+200 코인</span></div>
+            <div class="buttons"><button class="btn primary" id="dailyBtn" onclick="claimDaily()">오늘의 보상 받기</button></div>
+          </div>
+
+          <div class="panel">
+            <div class="section-head" style="margin-top:0"><div><h3>🏆 업적</h3><p>달성하면 코인을 받을 수 있습니다.</p></div></div>
+            <div id="achievementList" class="skills"></div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head" style="margin-top:0">
+            <div><h3>👑 전왕 김준성 특별 퀘스트</h3><p>모든 조건을 달성하면 전왕 김준성을 획득합니다.</p></div>
+          </div>
+          <div id="godQuestList" class="quest-grid"></div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head" style="margin-top:0"><div><h3>🌌 초월·불멸 특별 퀘스트</h3><p>특수 캐릭터의 획득 조건입니다.</p></div></div>
+          <div id="specialQuestList" class="quest-grid"></div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head" style="margin-top:0"><div><h3>👹 보스전</h3><p>보스전은 승리 시 캐릭터에게 10,000 EXP를 줍니다.</p></div></div>
+
+          <div class="card big" style="margin-top:8px">
+            <div class="img"><img decoding="async" src="assets/char_29.png" alt="주지태"></div>
+            <div>
+              <div class="detail-title">주지태 · 보스</div>
+              <div class="detail-sub r-X">BOSS X</div>
+              <div class="stats"><div class="stat"><b>10,000</b><span>HP</span></div><div class="stat"><b>3,000</b><span>ATK</span></div><div class="stat"><b>5,000</b><span>DEF</span></div></div>
+              <div class="trait"><b>보스 보상</b><br><span style="color:var(--gold);font-weight:900">승리 시 +1,000 코인 · 10,000 EXP</span></div>
+              <div class="buttons"><button class="btn primary" onclick="startBossBattle()">👹 주지태 보스전</button></div>
+            </div>
+          </div>
+
+          <div class="card big" style="margin-top:12px">
+            <div class="img"><img decoding="async" src="assets/free_jujitae_god.png" alt="자유의 주지태 · GOD"></div>
+            <div>
+              <div class="detail-title">자유의 주지태 · GOD</div>
+              <div class="detail-sub r-GOD">SPECIAL BOSS · 5 PAGE</div>
+              <div class="stats"><div class="stat"><b>10,000 → 200,000</b><span>PAGE HP</span></div><div class="stat"><b>5단계</b><span>연속 전투</span></div><div class="stat"><b>3회</b><span>페이지 회피</span></div></div>
+              <div class="trait"><b>5페이지 연속 보스전</b><br>PAGE 1 → PAGE 2(부활) → PAGE 3 → PAGE 4(부활) → PAGE 5 · GOD 순서로 진행됩니다.<br><span style="color:var(--gold);font-weight:900">완전 클리어: +40,000 코인 · +300,000 EXP</span></div>
+              <div class="buttons"><button class="btn primary" onclick="startFreeJujitaeBossBattle()">🩸 자유의 주지태 도전 시작</button></div>
+            </div>
+          </div>
+
+          <div class="card big" style="margin-top:12px"><div class="img"><img decoding="async" src="assets/hwarang_junggu.png" alt="김준구 보스" onerror="this.src='assets/월광검 김준구 SSS.png'"></div><div><div class="detail-title">김준구 잡기 · 화랑검 김준구</div><div class="detail-sub r-GOD">GOD BOSS</div><div class="stats"><div class="stat"><b>70,000</b><span>HP</span></div><div class="stat"><b>30,000</b><span>ATK</span></div><div class="stat"><b>30,000</b><span>DEF</span></div></div><div class="trait"><b>보상</b><br><span style="color:var(--gold);font-weight:900">승리 시 +30,000 코인 · 100,000 EXP · 화랑검 10% 확률</span></div><div class="buttons"><button class="btn primary" onclick="startJunGuBossBattle()">👑 김준구 보스전</button></div></div></div>
+          <div class="card big" style="margin-top:12px">
+            <div class="img"><img decoding="async" src="assets/char_28.png" alt="전왕 김준성"></div>
+            <div>
+              <div class="detail-title">전왕 김준성 · 보스</div>
+              <div class="detail-sub r-X">GOD BOSS</div>
+              <div class="stats"><div class="stat"><b>30,000</b><span>HP</span></div><div class="stat"><b>16,000</b><span>ATK</span></div><div class="stat"><b>20,000</b><span>DEF</span></div></div>
+              <div class="trait"><b>3중 권능</b><br>부활 · 봉인 · 권능</div>
+              <div class="buttons"><button class="btn primary" onclick="startGodBossBattle()">👑 전왕 김준성 도전</button></div>
+            </div>
+          </div>
+
+          <div class="card big" style="margin-top:12px">
+            <div class="img"><img decoding="async" src="assets/chuuni_seungwoo.png" alt="중2병 걸린 이승우"></div>
+            <div><div class="detail-title">중2병 걸린 이승우 · 보스</div><div class="detail-sub r-GOD">GOD BOSS</div><div class="stats"><div class="stat"><b>60,000</b><span>HP</span></div><div class="stat"><b>20,000</b><span>ATK</span></div><div class="stat"><b>24,000</b><span>DEF</span></div></div><div class="trait"><b>보상</b><br>승리 시 +10,000 코인 · +30,000 EXP · <span style="color:var(--gold);font-weight:900">10% 확률로 캐릭터 획득</span></div><div class="buttons"><button class="btn primary" onclick="startCustomBossBattle('chuuniSeungwoo')">🐉 중2병 이승우 보스전</button></div></div>
+          </div>
+          <div class="card big" style="margin-top:12px">
+            <div class="img"><img decoding="async" src="assets/jihong_boss.png" alt="왕대가리 김지홍"></div>
+            <div><div class="detail-title">왕대가리 김지홍 · 보스</div><div class="detail-sub r-SSS">SSS BOSS</div><div class="stats"><div class="stat"><b>8,000</b><span>HP</span></div><div class="stat"><b>5,000</b><span>ATK</span></div><div class="stat"><b>6,000</b><span>DEF</span></div></div><div class="trait"><b>보상</b><br>승리 시 +500 코인 · +2,000 EXP · <span style="color:var(--gold);font-weight:900">50% 확률로 캐릭터 획득</span></div><div class="buttons"><button class="btn primary" onclick="startCustomBossBattle('jihongBoss')">👑 왕대가리 김지홍 보스전</button></div></div>
+          </div>
+          <div class="card big" style="margin-top:12px">
+            <div class="img"><img decoding="async" src="assets/meat_monster_choi.png" alt="초생명체 최예강"></div>
+            <div><div class="detail-title">초생명체 최예강 · 보스</div><div class="detail-sub r-GOD">GOD BOSS</div><div class="stats"><div class="stat"><b>150,000</b><span>HP</span></div><div class="stat"><b>30,000</b><span>ATK</span></div><div class="stat"><b>80,000</b><span>DEF</span></div></div><div class="trait"><b>보상</b><br>승리 시 +2,000 코인 · +4,000 EXP · <span style="color:var(--gold);font-weight:900">3% 확률로 캐릭터 획득</span></div><div class="buttons"><button class="btn primary" onclick="startCustomBossBattle('meatMonsterChoi')">🛡️ 초생명체 최예강 보스전</button></div></div>
+          </div>
+
+          <div class="card big" style="margin-top:12px">
+            <div class="img"><img decoding="async" src="assets/jonggun_park.png" alt="종건 잡기"></div>
+            <div>
+              <div class="detail-title">종건 잡기 · 3페이지 보스</div>
+              <div class="detail-sub r-SSSplus">종건 잡기</div>
+              <div class="stats"><div class="stat"><b>페이지 1</b><span>박종건</span></div><div class="stat"><b>페이지 2</b><span>白鬼 시로오니</span></div><div class="stat"><b>페이지 3</b><span>백귀 야마자키 종건</span></div></div>
+              <div class="trait"><b>진행도</b><br>3페이지 모두 클리어해야 1회 클리어로 인정됩니다.<br>현재 누적 클리어: <span style="color:var(--gold);font-weight:900" id="jonggunClearCount">0</span>회</div>
+              <div class="trait"><b>획득 캐릭터</b><br>SSS+ 박종건 — 오직 종건 잡기 3페이지 클리어 보상</div>
+              <div class="buttons"><button class="btn primary" onclick="startJonggunBossBattle()">👹 종건 잡기 시작</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHOP -->
+      <div class="screen" id="screen-shop">
+        <div class="section-head" style="margin-top:0"><div><h3>🛒 상점</h3><p>경험치 아이템과 김준구 전용 무기를 구매할 수 있습니다.</p></div></div>
+        <div class="panel">
+          <div class="section-head" style="margin-top:0"><div><h3>🧪 소모 아이템</h3><p>구매 즉시 인벤토리에 저장됩니다.</p></div></div>
+          <div class="shop-grid"><div class="shop-item"><h4>경험치 2배 물약</h4><p>상대 캐릭터를 30번 잡는 동안 받는 경험치가 2배 증가합니다.</p><div class="buttons"><button class="btn primary" onclick="buyXpPotion()">10,000 코인</button></div></div></div>
+        </div>
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head" style="margin-top:0"><div><h3>⚔️ 무기 뽑기</h3><p>김준구 · 무기의 천재 김준구 · 화랑검 김준구 전용. 캐릭터 뽑기와 동일 확률.</p></div></div>
+          <div class="buttons"><button class="btn primary" onclick="pullWeapon(1)">1회 뽑기 · 10,000 코인</button><button class="btn" onclick="pullWeapon(10)">10회 뽑기 · 90,000 코인</button><button class="btn" onclick="pullWeapon(100)">💥 100회 뽑기 · 800,000 코인</button></div>
+          <div class="trait" style="margin-top:12px"><b>확률</b><br>COMMON 37.7% · UNCOMMON 24% · RARE 18% · EPIC 10% · S/SS/SSS/SSS+ 7% · X 0.3%<br>화랑검(GOD)은 무기 뽑기에 등장하지 않습니다. 중복 무기는 모두 별도 인벤토리에 저장됩니다.</div>
+        </div>
+        <div class="panel" style="margin-top:16px"><div class="section-head" style="margin-top:0"><div><h3>🗡️ 무기 목록</h3><p>모든 무기는 김준구 3종에게 장착할 수 있습니다.</p></div></div><div id="shopWeaponList" class="weapon-list"></div></div>
+      </div>
+
+      <!-- INVENTORY -->
+      <div class="screen" id="screen-inventory">
+        <div class="section-head" style="margin-top:0"><div><h3>🎒 인벤토리</h3><p>무기와 전리품을 관리하고 김준구 3종에 장착합니다.</p></div></div>
+        <div class="panel"><div class="section-head" style="margin-top:0"><div><h3>⚔️ 김준구 장비</h3><p>S등급 이상은 최대 2개 동시 장착 가능. 중복 무기도 각각 장착할 수 있습니다.</p></div></div><div id="weaponEquipContent"></div></div>
+        <div class="panel" style="margin-top:16px"><div class="section-head" style="margin-top:0"><div><h3>🎁 전리품 / 아이템</h3><p>전투 보상으로 얻은 아이템을 사용합니다.</p></div></div><div id="lootInventory" class="loot-grid"></div></div>
+      </div>
+
+      <!-- DEVELOPER CODE -->
+      <div class="screen" id="screen-code">
+        <div class="panel" style="max-width:650px;margin:0 auto">
+          <div class="section-head" style="margin-top:0">
+            <div>
+              <h3>🔐 개발자 코드</h3>
+              <p>X·GOD 특수 플레이어블 카드를 코드로 지급합니다.</p>
+            </div>
+          </div>
+          <div class="trait" style="margin-top:8px">
+            <b>보상</b><br>
+            인증에 성공하면 모든 X 등급 플레이어블 카드를 각각 1장씩 획득합니다.
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px;align-items:stretch;flex-wrap:wrap">
+            <input id="developerCodeInput" type="password" inputmode="text" autocomplete="off" placeholder="개발자 코드 입력" style="flex:1;min-width:220px;padding:14px;border-radius:12px;border:1px solid var(--line);background:#0a0f1c;color:#fff;outline:none">
+            <button class="btn primary" type="button" onclick="redeemDeveloperCode()" style="width:auto;min-width:150px;margin:0">X 등급 지급</button>
+          </div>
+          <p id="developerCodeMsg" style="color:var(--muted);font-size:12px;min-height:18px;margin:10px 0 0"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- CARD MODAL -->
+<div class="modal-wrap" id="cardModal"><div class="modal"><button class="close" type="button" aria-label="닫기" onclick="closeModal('cardModal')"></button><div id="cardModalContent"></div></div></div>
+
+<!-- GACHA RESULT -->
+<div class="modal-wrap" id="revealModal"><div class="modal reveal-modal"><button class="close" type="button" aria-label="닫기" onclick="closeModal('revealModal')"></button><div id="revealContent"></div><div class="buttons" style="justify-content:center"><button class="btn primary" onclick="closeModal('revealModal')">확인</button></div></div></div>
+
+<!-- DEV MODAL -->
+<div class="modal-wrap" id="devModal"><div class="modal"><button class="close" type="button" aria-label="닫기" onclick="closeModal('devModal')"></button><div class="section-head" style="margin-top:0"><div><h3>개발자 금고</h3><p>숨겨진 SECRET 등급 해제</p></div></div><input id="devCode" type="password" placeholder="개발자 코드" style="width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#0a0f1c;color:#fff;outline:none"><div class="buttons"><button class="btn primary" onclick="unlockSecret()">SECRET 해제</button></div><p id="devMsg" style="color:var(--muted);font-size:12px"></p></div></div>
+
+<script>
+
+    // Background music
+    const bgm = new Audio("assets/rpg%20bgm.mp3");
+    bgm.loop = true;
+    bgm.volume = 0.20;
+
+    function startBGM() {
+        bgm.play().catch(() => {});
+    }
+
+const cards = [
+ {id:'fighter',name:'파이터 이승우',rarity:'COMMON',img:'assets/char_36.png',hp:720,atk:110,def:65,trait:'잽의 리듬 — 첫 스킬 피해 +10%',skills:[['스킨십',120,0],['바디샷',150,1],['러시',230,3]]},
+ {id:'boxing',name:'복싱글러브를 구매한 승우',rarity:'UNCOMMON',img:'assets/char_11.png',hp:820,atk:125,def:75,trait:'글러브 적응 — 방어 시 다음 피해 15% 감소',skills:[['스킨십',135,0],['카운터',170,2],['훅 폭격',250,3]]},
+ {id:'muaythai',name:'무에타이 승우',rarity:'UNCOMMON',img:'assets/char_09.png',hp:900,atk:135,def:80,trait:'8지점 — 연속 스킬 적중 시 추가 25 피해',skills:[['스킨십',145,0],['엘보',175,1],['니킥 난무',265,3]]},
+ {id:'cyborg',name:'개조인간 이승우',rarity:'RARE',img:'assets/char_01.png',hp:1100,atk:150,def:105,trait:'합금 외피 — 받는 피해 8% 감소',skills:[['스킨십',170,0],['부스터 러시',210,1],['오버클럭',300,3]]},
+ {id:'unconscious',name:'무의식 승우',rarity:'RARE',img:'assets/char_10.png',hp:980,atk:170,def:80,trait:'무의식 반응 — HP 35% 이하에서 스킬 피해 +30%',skills:[['스킨십',160,0],['감각 삭제',205,2],['무의식 폭주',335,3]]},
+ {id:'yamasaki',name:'야마자키파 이승우',rarity:'RARE',img:'assets/char_22.png',hp:1080,atk:175,def:90,trait:'파의 자존심 — HP가 더 높은 동안 피해 +12%',skills:[['스킨십',175,0],['파열격',220,1],['야마자키식 난무',320,3]]},
+ {id:'tavi',name:'아라하시 타비',rarity:'RARE',img:'assets/char_21.png',hp:860,atk:165,def:70,trait:'응원 폭발 — 매 3턴마다 HP 60 회복',skills:[['응원탄',150,0],['돌진',190,1],['팬덤 폭격',280,3]]},
+ {id:'huya',name:'후야',rarity:'RARE',img:'assets/char_38.png',hp:940,atk:160,def:86,trait:'야성 — 치명타 확률 18%',skills:[['돌진',155,0],['포효',185,1],['야성 난타',300,3]]},
+ {id:'neon',name:'네온시티 이승우',rarity:'EPIC',img:'assets/char_05.png',hp:1180,atk:210,def:105,trait:'네온 과부하 — 스킬 쿨다운 1 감소',skills:[['스킨십',200,0],['사이버 스텝',240,1],['시티 브레이커',380,3]]},
+ {id:'brainrot',name:'브레인롯 븅신',rarity:'EPIC',img:'assets/char_15.png',hp:1250,atk:195,def:95,trait:'혼돈의 논리 — 20% 확률로 스킬 피해 2배',skills:[['뇌절',180,0],['혼돈킥',240,1],['대혼란',400,3]]},
+ {id:'shadow',name:'그림자 군주 승우',rarity:'EPIC',img:'assets/char_03.png',hp:1350,atk:230,def:145,trait:'암흑의 군주 — 매 턴 HP 5% 회복',skills:[['스킨십',210,0],['그림자 구속',250,2],['군주 강림',410,3]]},
+ {id:'golden',name:'담배빨이 금성제',rarity:'Legendary',img:'assets/char_07.png',hp:1450,atk:245,def:130,trait:'금성의 기세 — 상대가 상태이상이면 피해 +20%',skills:[['잽',225,0],['스트레이트',260,2],['바디훅',430,3]]},
+ {id:'newhuman',name:'신인류 최예강',rarity:'SS',img:'assets/char_20.png',hp:1600,atk:265,def:150,trait:'신인류 — 최대 HP +12%',skills:[['신체 강화',240,0],['초고속 베기',290,1],['인류 갱신',470,3]]},
+ {id:'moon',name:'월광검 김준구',rarity:'SSS',img:'assets/char_25.png',hp:1750,atk:300,def:165,trait:'월광검 — 홀수 턴 피해 +18%',skills:[['초승베기',270,0],['월광연참',330,2],['보름달 단절',520,3]]},
+ {id:'newawakened',name:'신각자 최예강',rarity:'SSS',img:'assets/char_19.png',hp:1850,atk:315,def:175,trait:'초월 각성 — 최초 1회 HP 1에서 생존',skills:[['각성타',290,0],['신각 충격파',340,2],['각자의 심판',560,3]]},
+ {id:'kaiju',name:'괴수 10호 이승우',rarity:'SSS',img:'assets/char_02.png',hp:2000,atk:330,def:160,trait:'괴수 핵 — HP 50% 이하에서 공격력 +25%',skills:[['스킨십',300,0],['포효 충격',380,1],['괴수화',600,4]]},
+ {id:'death',name:'죽음의 군주 이승우',rarity:'SSS',img:'assets/char_30.png',hp:2100,atk:350,def:185,trait:'사신 계약 — 처치한 상대에게서 HP 15% 흡수',skills:[['스킨십',310,0],['영혼 절단',390,2],['사형 선고',640,4]]},
+ {id:'mischief',name:'짖궂은 장난꾸러기 이현도',rarity:'SSS+',img:'assets/char_31.png',hp:2150,atk:345,def:150,trait:'장난꾸러기 — 15% 확률로 상대 스킬 무효화',skills:[['장난 킥',280,0],['트릭 샷',360,1],['대형 사고',650,4]]},
+ {id:'jon',name:'전과 8범 장난꾸러기 존 존스',rarity:'X',img:'assets/char_27.png',hp:8000,atk:3000,def:6000,trait:'8번째 기록 — 피해를 받을수록 공격력 +5%',skills:[['눈찌르기',2000,0],['플라잉 니킥',4000,2],['플라잉 오블리킥',7000,4]]},
+ {id:'jujitae',name:'주지태',rarity:'X',img:'assets/char_29.png',hp:10000,atk:5000,def:7000,trait:'두려움 — 자신의 HP가 1이라도 깎일 시 스킬 데미지 2배',skills:[['레프트 훅',4000,0],['플라잉 암바',6000,2],['인사이드 힐훅',8000,4]]},
+ {id:'chuuniSeungwoo',name:'중2병 걸린 이승우',rarity:'GOD',img:'assets/chuuni_seungwoo.png',hp:20000,atk:20000,def:24000,trait:'이기적인 새끼 — 사망 시 다른 자신의 보유 캐릭터 1명을 희생해 부활한다.',trait2:'흑염룡 — 상대의 HP가 자신보다 높을 경우 체력 +30,000',skills:[['비겁하게 기습 공격하기',10000,0],['엿 날리기',0,1],['쉐도우 다크 레전더리 드래곤 브레스',90000,4]],noGacha:true,customMaxLevel:200},
+ {id:'kingJihong',name:'왕대가리 김지홍',rarity:'SSS',img:'assets/jihong_boss.png',hp:8000,atk:5000,def:6000,trait:'강약약강 — 자신보다 HP가 낮은 상대를 만나면 모든 스킬 데미지 +3,000',skills:[['돌 던지기',500,0],['쇠파이프 던지기',2000,1],['화염병 던지기',50000,4]],noGacha:true},
+ {id:'meatMonsterChoi',name:'초생명체 최예강',rarity:'GOD',img:'assets/meat_monster_choi.png',hp:150000,atk:30000,def:80000,trait:'고기방패 반사 — 상대의 공격을 3회 반사한다.',trait2:'고기방패 — 2회 턴 동안 상대의 공격 데미지를 받지 않는다.',skills:[['최예강의 반격',5000,0],['똥꼬 보여주기',5500,1],['L을 가져가',6000,4]],noGacha:true,customMaxLevel:200},
+ {id:'yuk',name:'육성제',rarity:'S',img:'assets/char_26.png',hp:1500,atk:260,def:120,trait:'육성 완료 — 경험치 대신 공격력 강화',skills:[['훈련 펀치',230,0],['연속 차기',310,1],['완성형',480,3]]},
+ {id:'jihong',name:'면상치워 김지홍',rarity:'S',img:'assets/char_08.png',hp:1380,atk:250,def:112,trait:'면상 치워 — 상대 첫 공격 피해 25% 감소',skills:[['밀어내기',210,0],['돌려차기',300,1],['면상 철거',460,3]]},
+ {id:'pitiful',name:'한심한 이승우',rarity:'C',img:'assets/char_37.png',hp:560,atk:80,def:40,trait:'한심함의 힘 — 체력이 낮을수록 공격력 상승',skills:[['스킨십',90,0],['자기합리화',120,1],['마지막 발악',200,2]]},
+ {id:'arrested',name:'성추행 후 체포된 승우',rarity:'COMMON',img:'assets/char_16.png',hp:650,atk:95,def:55,trait:'구속 — 첫 턴 이동 불가, 대신 피해 30% 감소',skills:[['스킨십',105,0],['철창 удар',145,1],['도주 시도',220,3]]},
+ {id:'peeping',name:'여자 화장실 염탐하는 이승우',rarity:'COMMON',img:'assets/char_24.png',hp:620,atk:90,def:50,trait:'몰래보기 — 첫 공격 치명타 확률 35%',skills:[['스킨십',120,0],['몰래 이동',130,1],['도망치기',190,2]]},
+ {id:'junseongX',name:'김준성',rarity:'X',img:'assets/char_04.png',hp:6000,atk:5000,def:6000,trait:'회피 — 상대의 공격을 3회 확정 회피',skills:[['로우킥',3000,0],['오버핸드 훅',5000,2],['암바',7000,4]]},
+ {id:'shinSeungwoo',name:'신 이승우',rarity:'X',img:'assets/char_18.png',hp:7000,atk:3000,def:5000,trait:'도박 — 50% 확률로 전투 능력치를 2배로 올리고, 실패 시 2배로 낮춘다. 2차 특성: 부활 — HP 0에서 1회 부활.',skills:[['펀치',1500,0],['강타',5000,2],['찬스',0,3]]},
+ {id:'streetFighterSeungwoo',name:'스트릿 파이터 이승우',rarity:'UNCOMMON',img:'assets/char_17.png',hp:800,atk:400,def:100,trait:'막싸움 : 5%확률로 자신의 공격력을 10% 증가시킨다.',skills:[['막치기',100,0],['뺨치기',150,1],['인중 때리기',200,2]]},
+ {id:'transcendSeungwoo',name:'초월자 이승우',rarity:'X',img:'assets/char_34.png',hp:4000,atk:10000,def:5000,trait:'흡수 : 자신의 HP가 0이 되면 보유중인 생존 캐릭터의 수명과 바꾸어 자신은 부활하고 보유중인 캐릭터는 랜덤하게 사망한다.',skills:[['명치 치기',2000,0],['급소 치기',7000,2],['목치기',10000,4]],specialCode:'go beyond'},
+ {id:'meatShieldChoi',name:'단단한 고기 방패 최예강',rarity:'SS',img:'assets/char_06.png',hp:10000,atk:0,def:5000,trait:'처맞아도 안뒤지기 : 강력한 위력의 데미지를 맞아도 무조건 1회 살아남는다.',skills:[['조롱',0,0],['농락',0,1],['욕설난발',0,2]]},
+ {id:'transcendChoi',name:'초월자 최예강',rarity:'X',img:'assets/char_35.png',hp:20000,atk:0,def:10000,trait:'난 바퀴벌레다 좆밥들아 : 3회턴동안 무적 상태를 유지한다.',skills:[['패드립',0,0],['쌍욕개패드립',0,1],['조롱과 패드립',0,2]],specialCode:'see bar'},
+ {id:'immortalChoi',name:'불멸의 최예강',rarity:'GOD',img:'assets/char_14.png',hp:50000,atk:0,def:30000,trait:'죽여보던가 : 2회동안 상대 공격을 반사한다.',skills:[['니엄마',0,0],['니애비',0,1],['니할애비',0,2]],noGacha:true},
+ {id:'immortalSeungwoo',name:'불멸의 이승우',rarity:'GOD',img:'assets/char_13.png',hp:15000,atk:5000,def:7000,trait:'처 맞을 용기 : 상대가 자신보다 공격력이 높다면 자신의 HP+2000',trait2:'부활 : 사망 시 1회 부활한다.',skills:[['존나 많이 때리고 한대만 때린척 하기',8000,0],['급소 때려놓고 팔 때린척 하기',5000,0],['운동하기',0,0]],noGacha:true},
+ {id:'slyJuwan',name:'얍삽한 놈 김주완',rarity:'SS',img:'assets/char_23.png',hp:1000,atk:8000,def:1000,trait:'몰빵',skills:[['몰빵',0,0]]},
+ {id:'transcendJuwan',name:'초월자 김주완',rarity:'X',img:'assets/char_32.png',hp:1000,atk:1000,def:1000,trait:'영웅은 죽지 않아요 : 사망한 자신의 원하는 캐릭터를 부활시키고 초월자 김주완은 사망한다.',skills:[],noSkills:true},
+ {id:'transcendSanguk',name:'초월자 박상욱',rarity:'X',img:'assets/char_33.png',hp:30000,atk:14000,def:10000,trait:'차례 회귀 : 자신의 공격턴이 2회 주어진다.',trait2:'사망회귀 : 사망 했을시 부활한다.',skills:[['오블리킥',6000,0],['아웃사이드 힐훅',10000,2],['인버티드 힐훅',11000,4]],specialCode:'god sanguk',noGacha:true,noOpponent:true,codexHidden:true},
+ {id:'immortalSanguk',name:'불멸의 박상욱',rarity:'GOD',img:'assets/char_12.png',hp:990000,atk:990000,def:990000,trait:'불사의 권능 : 사망해도 죽지 않고 무한히 부활함',trait2:'불멸자의 권능 : 현재 능력치와 스킬의 위력을 5배 만큼 강화시킨다.',trait3:'지배의 권능 : 상대 캐릭터의 공격을 무조건적으로 반사함.',trait4:'속박의 권능 : 상대의 턴을 10회 봉인 시킴.',skills:[['불멸 오블리킥',990000,0],['불멸 아웃사이드 힐훅',999000,2],['불멸 인버티드 힐훅',999900,4],['핵',999999,5]],specialCode:'level 99',noGacha:true,noOpponent:true,codexHidden:true,alwaysAwaken:1000,customMaxLevel:1000,fixedXp:1000},
+ {id:'godJunseong',name:'전왕 김준성',rarity:'GOD',img:'assets/char_28.png',hp:30000,atk:16000,def:20000,trait:'부활 — HP 0에서 1회 부활 · 봉인 — 상대 공격 3회 봉인 · 권능 — 한 턴에 스킬 2개 사용 가능',skills:[['업그레이드 카피',0,0],['안면 니킥',8000,2],['트라이앵글 초크',11000,4],['백초크',14000,5]]},
+ {id:'jonggun',name:'박종건',rarity:'SSS+',img:'assets/jonggun_park.png',hp:10000,atk:10000,def:10000,trait:'경지 (힘, 맷집) — 공격 ×2 · HP ×2',skills:[['정권지르기',6000,0],['정권지르기 5연',9000,2]],noGacha:true,noOpponent:true},
+ {id:'shirooni',name:'白鬼 시로오니',rarity:'X',img:'assets/jonggun_shirooni.png',hp:30000,atk:30000,def:30000,trait:'흑골 — 상대 공격을 3회 무시함.',trait2:'자신만의길 (신체) — 사망했을시 부활하고 모든 능력치 + 5000',skills:[['정권지르기 10연',8000,0],['바디훅',12000,2],['키신세이켄 17연',17000,4]],noGacha:true,noOpponent:true},
+ {id:'yamasakiJonggun',name:'백귀 야마자키 종건',rarity:'GOD',img:'assets/jonggun_yamasaki.png',hp:90000,atk:80000,def:80000,trait:'무의식 — HP, ATK, DEF 수치를 모두 100000까지 올린다.',trait2:'죽일각오 — 자신이 사망하면 상대 캐릭터도 사망한다.',trait3:'자신만의길 (신체) — 사망했을시 부활하고 모든 능력치 + 5000',trait4:'흑골 — 상대 공격을 3회 무시함. · 경지 — 상대 공격을 3회 회피함.',skills:[['키신세이켄 81연',30000,0],['정권지르기',45000,2],['아이키도',0,4]],noGacha:true,noOpponent:true},
+ {id:'kimJunggu',name:'김준구',rarity:'SSS+',img:'assets/kim_junggu.png',hp:5000,atk:3000,def:5000,trait:'경지 (기술, 속도) — 50% 확률로 공격 시 2배 치명타 · 상대 턴 1회 봉인',skills:[['연장질',2000,0],['찌르기',4000,50],['마구 베기',5000,100]],noGacha:true,noOpponent:true,jungu:true},
+ {id:'weaponGeniusJunggu',name:'무기의 천재 김준구',rarity:'X',img:'assets/weapon_genius_junggu.png',hp:10000,atk:6000,def:9000,skills:[['연장질',4000,0],['베기',5000,50],['난도질',6000,100]],noGacha:true,noOpponent:true,jungu:true},
+ {id:'hwarangJunggu',name:'화랑검 김준구',rarity:'GOD',img:'assets/hwarang_junggu.png',hp:70000,atk:30000,def:30000,skills:[['제 1검 초월(初月)',10000,0],['제 2검 현월(弦月)',14000,50],['제 3검 만월(滿月)',16000,100],['월광검 50검식',100000,150]],noGacha:true,noOpponent:true,jungu:true,customMaxLevel:200},
+ {id:'freeJujitaeGod',name:'자유의 주지태 · GOD',rarity:'GOD',img:'assets/free_jujitae_god.png',hp:150000,atk:100000,def:80000,trait:'자유 — 상대 공격을 3회 회피함.',trait2:'두려움 — 자신의 HP가 1이라도 깎일 시 스킬 데미지 2배',trait3:'역광 — 두려움 효과가 발동될시 자신의 HP + 100000',skills:[['막싸움',40000,0],['플라잉 암바',50000,50],['힐훅',700000,100]],noGacha:true,noOpponent:true,customMaxLevel:200},
+ {id:'grapplerJunseong',name:'그래플러 김준성',rarity:'X',img:'assets/grappler_kimjunseong.png',hp:15000,atk:20000,def:20000,trait:'메미 — 자신의 공격 턴이 2회이다.',skills:[['베이스볼 초크',8000,0],['앵클락',20000,50],['기무라락',25000,100]],customMaxLevel:200},
+ {id:'strikerJunseong',name:'타격의 김준성',rarity:'X',img:'assets/striker_kimjunseong.png',hp:10000,atk:30000,def:10000,trait:'더킹 — 상대의 공격을 3회 회피한다.',skills:[['잽',7000,0],['스트레이트',10000,50],['훅',12000,100],['어퍼컷',24000,150]],customMaxLevel:200},
+ {id:'allrounderJunseong',name:'올라운더 김준성',rarity:'GOD',img:'assets/allrounder_kimjunseong.png',hp:25000,atk:50000,def:30000,trait:'스웨이 — 상대의 공격을 3회 회피한다.',trait2:'가드 — 자신의 공격턴은 2회로 적용된다.',skills:[['암바',15000,0],['바디훅',30000,50],['백초크',50000,100]],customMaxLevel:200,noGacha:true},
+ {id:'asuraOverlordJunseong',name:'鬪神霸王 김준성',rarity:'SECRET',img:'assets/asura_overlord_junseong.png',hp:150000,atk:180000,def:160000,trait:'가드 — 자신의 공격턴은 3회로 적용된다.',trait2:'속박 — 상대의 공격 턴을 3회 봉인한다.',trait3:'휴식 — HP가 100,000 이하가 되면 체력을 40,000 회복한다.',skills:[['무에타이 엘보우',30000,0],['카피',0,0],['길로틴 초크',100000,100],['브라질리언 킥',130000,150],['플라잉 니킥',135000,200],['김준성 콤보',180000,250]],customMaxLevel:400,codexHidden:true},
+ {id:'secret',name:'개발자 승우',rarity:'SECRET',img:'assets/char_31.png',hp:9999,atk:999,def:999,trait:'개발자 권한 — 전투 데이터가 정상적이지 않습니다.',skills:[['코드 수정',999,0],['버그 악용',1599,0],['강제 종료',9999,0]]}
+];
+
+const rarityClass = r => r==='SSS+'?'SSSplus':r;
+const gachaPool = cards.filter(c=>c.rarity!=='SECRET'&&c.rarity!=='GOD'&&!c.noGacha);
+let state = JSON.parse(localStorage.getItem('swArenaSave')||'null') || {coins:5000,owned:{},fragments:{},awakens:{},levels:{},xp:{},currentHp:{},selectedId:null,secret:false,godUnlocked:false,stats:{pulls:0,wins:0,bossWins:0,jujitaeBossWins:0,godBossWins:0,transcendChoiDeaths:0,jonggunStageWins:0},dailyClaim:'',achievements:{},redeemedCodes:{},specialQuestClaimed:{}};
+state.stats=state.stats||{pulls:0,wins:0,bossWins:0,jujitaeBossWins:0,godBossWins:0};
+state.stats.jujitaeBossWins=state.stats.jujitaeBossWins||0;
+state.stats.godBossWins=state.stats.godBossWins||0;
+state.stats.freeJujitaeBossWins=state.stats.freeJujitaeBossWins||0;
+state.stats.jonggunStageWins=state.stats.jonggunStageWins||0;
+state.stats.transcendChoiDeaths=state.stats.transcendChoiDeaths||0;
+state.stats.chuuniBossWins=Number(state.stats.chuuniBossWins||0);
+state.stats.jihongBossWins=Number(state.stats.jihongBossWins||0);
+state.stats.meatMonsterChoiBossWins=Number(state.stats.meatMonsterChoiBossWins||0);
+state.redeemedCodes=state.redeemedCodes||{};
+state.specialQuestClaimed=state.specialQuestClaimed||{};
+state.specialQuestClaimed.godJunseong=!!state.specialQuestClaimed.godJunseong;
+state.specialQuestClaimed.jonggunBossReward=!!state.specialQuestClaimed.jonggunBossReward;
+state.specialQuestClaimed.shirooni=!!state.specialQuestClaimed.shirooni;
+state.specialQuestClaimed.yamasakiJonggun=!!state.specialQuestClaimed.yamasakiJonggun;
+state.specialQuestClaimed.freeJujitaePurchased=!!state.specialQuestClaimed.freeJujitaePurchased;
+state.specialQuestClaimed.asuraOverlord=!!state.specialQuestClaimed.asuraOverlord;
+state.specialQuestClaimed.allrounderJunseong=!!state.specialQuestClaimed.allrounderJunseong;
+state.overlordCodeSeen=!!state.overlordCodeSeen;
+state.currentHp=state.currentHp||{};
+state.godUnlocked=!!state.godUnlocked;
+state.dailyClaim=state.dailyClaim||'';
+state.achievements=state.achievements||{};
+state.xCodeRedeemed=!!state.xCodeRedeemed;
+state.xpBoostKills=Math.max(0,Number(state.xpBoostKills||0));
+state.potions=state.potions||{}; state.potions.xp2=Number(state.potions.xp2||0);
+state.loot=state.loot||{}; state.killsById=state.killsById||{};
+state.weaponInventory=Array.isArray(state.weaponInventory)?state.weaponInventory:[];
+state.equippedWeapons=state.equippedWeapons||{}; state.weaponPulls=Number(state.weaponPulls||0);
+state.weaponStats=state.weaponStats||{sPlusOrHigher:0}; state.traits=state.traits||{}; state.attackBonus=state.attackBonus||{}; state.junGuQuestClaimed=state.junGuQuestClaimed||{}; state.junGuBossWins=Number(state.junGuBossWins||0); state.weaponHwarangObtained=!!state.weaponHwarangObtained;
+state.redeemedCodes=state.redeemedCodes||{};
+if(state.xCodeRedeemed)state.redeemedCodes.xCode=true;
+state.levels=state.levels||{};
+state.xp=state.xp||{};
+state.awakens=state.awakens||{};
+state.owned=state.owned||{};
+state.selectedId=state.selectedId||null;
+
+// 무기 정의는 저장 데이터 정규화보다 먼저 선언해서 기존 세이브를 불러올 때도 안전하게 계산합니다.
+let weaponDefs=[];
+
+// 오래된 세이브/이전 버전에서 NaN 또는 잘못된 숫자가 저장되어도 자동 복구합니다.
+function getBattleHpRaw(c,lvl,awaken){return c.hp + (lvl-1)*100 + awaken*100;}
+const finiteNumber=(value,fallback)=>{
+  const n=Number(value);
+  return Number.isFinite(n)?n:fallback;
+};
+for(const c of cards){
+  const owned=finiteNumber(state.owned[c.id],0);
+  state.owned[c.id]=owned;
+  if(owned>0){
+    const maxLv=getMaxLevel(c);
+    const rawLv=finiteNumber(state.levels[c.id],1);
+    state.levels[c.id]=Math.max(1,Math.min(maxLv,Math.floor(rawLv)));
+    state.xp[c.id]=Math.max(0,finiteNumber(state.xp[c.id],0));
+    state.awakens[c.id]=Math.max(0,Math.floor(finiteNumber(state.awakens[c.id],0)));
+    if(c.alwaysAwaken!==undefined) state.awakens[c.id]=c.alwaysAwaken;
+    const maxHp=getBattleHp(c);
+    const rawHp=finiteNumber(state.currentHp[c.id],maxHp);
+    state.currentHp[c.id]=Math.max(0,Math.min(maxHp,rawHp));
+  }
+}
+if(!Number.isFinite(Number(state.coins))) state.coins=5000; else state.coins=Number(state.coins);
+if(state.selectedId && !ownedCount(state.selectedId)) state.selectedId=null;
+
+let currentFilter='ALL';
+let playerCard=null, enemyCard=null, playerHp=0, enemyHp=0, turn=1, battleOver=false, customChoiReflectLeft=0, customChoiShieldTurns=0, bossMode=false, godBossMode=false, jonggunBossMode=false, freeJujitaeBossMode=false, junGuBossMode=false, customBossMode=false, customBossId=null, jonggunPage=0, freeJujitaePage=0, freeJujitaePage2ReviveUsed=false, freeJujitaePage4ReviveUsed=false, freeJujitaeDodgeLeft=0, freeJujitaeFearActive=false, freeJujitaeReverseLightUsed=false, jonggunWhiteReviveUsed=false, jonggunYamasakiReviveUsed=false, jonggunBlackBoneLeft=0, jonggunDodgeLeft=0, jonggunLastPlayerDamage=0, playerBattleAtk=0, playerBattleDef=0, playerBattleMaxHp=0, playerActionsThisTurn=0, playerSealTurns=0, playerDodgeLeft=0, playerResurrectUsed=false, playerGambleApplied=false, playerChanceUsed=false, playerMeatShieldUsed=false, playerTranscendChoiInvulTurns=0, playerImmortalChoiReflectLeft=0, playerImmortalSeungwooResurrectUsed=false, playerTranscendSangukResurrected=false, playerImmortalSangukSealTurns=0, playerAbsorbUsed=false, playerHwarangResurrectUsed=false, godResurrectUsed=false, playerRestUsed=false;
+let devClicks=0;
+
+function save(){localStorage.setItem('swArenaSave',JSON.stringify(state)); updateTop();}
+function updateTop(){
+ const owned=Object.keys(state.owned).filter(k=>state.owned[k]>0).length;
+ document.querySelectorAll('#coinTop,#coinSide').forEach(e=>e.textContent=state.coins.toLocaleString());
+ document.querySelectorAll('#ownedTop,#ownedSide').forEach(e=>e.textContent=owned);
+ document.querySelector('#awakeningSide').textContent=Object.keys(state.awakens).filter(k=>state.awakens[k]>0).length;
+ const visibleTotal=cards.filter(c=>c.rarity!=='SECRET'&&!c.codexHidden).length + cards.filter(c=>c.codexHidden&&ownedCount(c.id)>0).length;
+  document.querySelector('#collectionCount').textContent=`${owned} / ${visibleTotal} 수집`;
+ const selected=state.selectedId?cards.find(c=>c.id===state.selectedId):null;
+ const side=document.querySelector('#selectedSide');
+ if(side) side.textContent=selected?selected.name:'없음';
+}
+function ownedCount(id){
+  const n=Number(state.owned?.[id]);
+  return Number.isFinite(n)&&n>0?n:0;
+}
+function cardPower(c){return c.hp + c.atk*4 + c.def*3 + (c.rarity==='SECRET'?9999:0)}
+function go(screen){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===screen));document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+screen).classList.add('active');document.getElementById('pageTitle').textContent={home:'승우 아레나',gacha:'승우 뽑기',collection:'승우 도감',battle: bossMode ? (customBossMode ? (customBossId==='chuuniSeungwoo' ? '중2병 걸린 이승우 보스전' : (customBossId==='jihongBoss' ? '왕대가리 김지홍 보스전' : '초생명체 최예강 보스전')) : (jonggunBossMode ? '종건 잡기' : (freeJujitaeBossMode ? '자유의 주지태 · GOD 보스전' : (godBossMode ? '전왕 김준성 보스전' : (junGuBossMode ? '김준구 보스전' : '주지태 · 보스전'))))) : '1 : 1 배틀',awakening:'각성 연구소',rewards:'보상 센터',shop:'상점',inventory:'인벤토리',code:'개발자 코드'}[screen];if(screen==='collection')renderCollection();if(screen==='awakening')renderAwakening();if(screen==='rewards')renderRewards();if(screen==='shop')renderShop();if(screen==='inventory')renderInventory();if(screen==='battle'&&!playerCard)setupBattle(); else if(screen==='battle') renderBattleSelector();}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.screen)));
+
+document.getElementById('devLogo').addEventListener('click',()=>{devClicks++; if(devClicks>=5){devClicks=0; document.getElementById('devModal').classList.add('show')}});
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-wrap.show').forEach(m=>m.classList.remove('show'))}});
+document.querySelectorAll('.modal-wrap').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
+
+function cardHTML(c){
+ const count=ownedCount(c.id);
+ const selected=state.selectedId===c.id && count>0;
+ const lvl=count?getCardLevel(c):0;
+ const hp=count?getPersistentHp(c):0;
+ const maxHp=count?getBattleHp(c):0;
+ return `<div class="card" onclick="openCard('${c.id}')">
+   <div class="img"><img decoding="async" src="${c.img}" alt="${c.name}" loading="lazy"></div>
+   <div class="meta">
+     <div class="name">${c.name}</div>
+     <div class="rarity r-${rarityClass(c.rarity)}">${c.rarity}</div>
+     ${count?`<div style="margin-top:6px"><span class="tag">보유 ${count}</span></div><div style="margin-top:5px;color:${hp<maxHp?'#ffb36d':'#9ea9c5'};font-size:9px">Lv.${lvl}/${getMaxLevel(c)} · HP ${hp.toLocaleString()}/${maxHp.toLocaleString()}${hp<maxHp?' · 회복 필요':''}</div>`:''}
+     ${selected?`<div class="selected-badge">현재 사용</div>`:''}
+   </div>
+ </div>`;
+}
+function renderFeatured(){
+ const featured=['shadow','death','kaiju','neon','fighter'];
+ document.getElementById('featuredGrid').innerHTML=featured.map(id=>cardHTML(cards.find(c=>c.id===id))).join('');
+}
+function setupFilters(){
+ const rs=['ALL','COMMON','UNCOMMON','RARE','EPIC','S','SS','SSS','SSS+','X','GOD','SECRET'];
+ document.getElementById('filters').innerHTML=rs.map(r=>`<button class="filter ${r==='ALL'?'active':''}" onclick="setFilter('${r}')">${r}</button>`).join('');
+}
+function setFilter(f){currentFilter=f;document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.textContent===f));renderCollection()}
+
+function ensureCharacterState(c){
+  if(ownedCount(c.id)>0){
+    if(state.levels[c.id]===undefined) state.levels[c.id]=1;
+    if(state.xp[c.id]===undefined) state.xp[c.id]=0;
+    if(state.currentHp[c.id]===undefined) state.currentHp[c.id]=getBattleHp(c);
+  }
+}
+
+function renderCollection(){
+  let list=cards.filter(c=>c.rarity!=='SECRET'||state.secret||(c.id==='asuraOverlordJunseong'&&ownedCount(c.id)>0));
+  list=list.filter(c=>!c.codexHidden||ownedCount(c.id)>0);
+  if(currentFilter!=='ALL') list=list.filter(c=>c.rarity===currentFilter);
+  const owned=list.filter(c=>ownedCount(c.id)>0), locked=list.filter(c=>ownedCount(c.id)===0);
+  const sorted=[...owned,...locked];
+  document.getElementById('collectionGrid').innerHTML=sorted.map(c=>{
+    if(ownedCount(c.id)>0) return cardHTML(c);
+    return `<div class="card" style="opacity:.5"><div class="img" style="display:grid;place-items:center"><span style="font-size:34px;color:#71809e">?</span></div><div class="meta"><div class="name">미획득 카드</div><div class="rarity">${c.rarity}</div></div></div>`;
+  }).join('') || `<div class="empty">아직 카드가 없습니다.</div>`;
+}
+
+function openCard(id){
+ const c=cards.find(x=>x.id===id); if(!c) return;
+ const count=ownedCount(id);
+ const lvl=getCardLevel(c), maxLv=getMaxLevel(c), xp=getCardXp(c), need=nextXpNeed(c);
+ const pct=maxLv>lvl?Math.min(100,(xp/need)*100):100;
+ const hp=getPersistentHp(c), maxHp=getBattleHp(c);
+ const selected=state.selectedId===id;
+ const skills=c.skills.map((s,i)=>{
+   const unlocked=isSkillUnlocked(c,i,lvl);
+   const damage=(c.id==='shinSeungwoo'&&i===2)?'50% 도박':(c.id==='godJunseong'&&i===0)?'상대 1번 스킬 ×2':`${getSkillDamage(c,i)} 피해`;
+   return `<div class="skill ${unlocked?'':'locked-skill'}"><div class="ico">${['⚡','🔥','💀','🩸'][i]||'✦'}</div><div><b>${unlocked?s[0]:'🔒 '+s[0]}</b><span>${unlocked?damage:`Lv.${skillUnlockLevel(i)} 해금`}</span></div></div>`;
+ }).join('');
+ const healButton=hp<maxHp?`<button class="btn" onclick="healCharacter('${id}')">❤️ 회복 · 3,000 코인</button>`:`<button class="btn" disabled>❤️ HP 가득 참</button>`;
+ const selectButton=(count && (c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong') && c.rarity!=='GOD')?`<button class="btn ${selected?'selected':''}" onclick="selectCharacter('${id}')">${selected?'✅ 현재 사용하는 캐릭터':'⚔️ 이 캐릭터 사용'}</button>`:c.rarity==='GOD'&&count?`<button class="btn ${selected?'selected':''}" onclick="selectCharacter('${id}')">${selected?'✅ 현재 사용하는 캐릭터':'👑 전왕 사용'}</button>`:c.id==='asuraOverlordJunseong'&&count?`<button class="btn ${selected?'selected':''}" onclick="selectCharacter('${id}')">${selected?'✅ 현재 사용하는 캐릭터':'🔥 鬪神霸王 사용'}</button>`:'';
+ document.getElementById('cardModalContent').innerHTML=`<div class="card big">
+   <div class="img"><img decoding="async" src="${c.img}" alt="${c.name}"></div>
+   <div>
+     <div class="detail-title">${c.name}</div>
+     <div class="detail-sub r-${rarityClass(c.rarity)}">${c.rarity} · 보유 ${count}</div>
+     <div class="level-box">
+       <div class="level-top"><span>캐릭터 레벨</span><b>Lv.${lvl} / ${maxLv}</b></div>
+       <div class="xpbar"><div class="xpfill" style="width:${pct}%"></div></div>
+       <div class="level-top" style="margin-top:6px"><span>${lvl>=maxLv?'MAX LEVEL':`EXP ${xp.toLocaleString()} / ${need.toLocaleString()}`}</span><span>레벨업마다 능력치/스킬 피해 +100</span></div>
+     </div>
+     <div class="heal-box"><div class="hp-state"><span>현재 HP</span><b>${hp.toLocaleString()} / ${maxHp.toLocaleString()}</b></div><div class="xpbar"><div class="xpfill" style="width:${maxHp?hp/maxHp*100:0}%"></div></div><div class="select-row">${healButton}</div></div>
+     <div class="stats"><div class="stat"><b>${getBattleHp(c)}</b><span>HP</span></div><div class="stat"><b>${getBattleAtk(c)}</b><span>ATK</span></div><div class="stat"><b>${getBattleDef(c)}</b><span>DEF</span></div></div>
+     <div class="trait"><b>특성</b><br>${c.trait}${String(state.traits?.[id]||'').includes('두려움')?' · 💎 두려움':''}</div>
+     <div class="skills">${skills}</div>
+     <div class="select-row">${selectButton}</div>
+   </div>
+ </div>`;
+ document.getElementById('cardModal').classList.add('show');
+}
+
+function chooseGacha(){
+  const p=Math.random()*100;
+  if(p<0.3){
+    const x=gachaPool.filter(c=>c.rarity==='X');
+    return x[Math.floor(Math.random()*x.length)];
+  }
+  const q=(p-0.3)/99.7*100;
+  let group;
+  if(q<37.7) group=['COMMON','C'];
+  else if(q<61.7) group=['UNCOMMON'];
+  else if(q<79.7) group=['RARE'];
+  else if(q<89.7) group=['EPIC'];
+  else if(q<96.7) group=['Legendary','S','SS'];
+  else group=['SSS','SSS+'];
+  const arr=gachaPool.filter(c=>group.includes(c.rarity));
+  return arr[Math.floor(Math.random()*arr.length)] || gachaPool[0];
+}
+
+function getMaxLevel(c){return c.customMaxLevel||((c.rarity==='GOD')?200:100)}
+
+function getCardLevel(c){
+  const raw=Number(state.levels?.[c.id]);
+  if(!Number.isFinite(raw)) return ownedCount(c.id)>0?1:0;
+  return Math.max(ownedCount(c.id)>0?1:0,Math.min(getMaxLevel(c),Math.floor(raw)));
+}
+function getCardXp(c){
+  const n=Number(state.xp?.[c.id]);
+  return Number.isFinite(n)&&n>=0?n:0;
+}
+function skillUnlockLevel(i){return i===0?1:(i===1?50:(i===2?100:(i===3?150:(i===4?200:(i===5?250:150)))))}
+function isSkillUnlocked(c,i,lvl=getCardLevel(c)){
+  if(i===0) return true;
+  const req=skillUnlockLevel(i);
+  if(c.id==='asuraOverlordJunseong' || c.id==='strikerJunseong') return lvl>=req;
+  if(i===1) return lvl>=50;
+  if(i===2) return lvl>=100;
+  return c.rarity==='GOD' && lvl>=150;
+}
+function nextXpNeed(c){const lvl=getCardLevel(c); if(lvl>=getMaxLevel(c))return 0; return c.fixedXp|| (500+(lvl*200));}
+
+function getAwakenLevel(c){
+  const n=Number(state.awakens?.[c.id]);
+  return Number.isFinite(n)&&n>=0?Math.floor(n):0;
+}
+function getBattleHp(c){const w=c?.jungu?getWeaponAggregate(c.id):{hp:0}; return Math.floor((c.hp + (getCardLevel(c)-1)*100 + getAwakenLevel(c)*100 + w.hp) * (c.id==='immortalSanguk'?5:1))}
+function getBattleAtk(c){const w=c?.jungu?getWeaponAggregate(c.id):{attack:0}; const bonus=Number(state.attackBonus?.[c.id]||0); return Math.floor((c.atk + (getCardLevel(c)-1)*100 + getAwakenLevel(c)*100 + w.attack + bonus) * (c.id==='immortalSanguk'?5:1))}
+function getBattleDef(c){return Math.floor((c.def + (getCardLevel(c)-1)*100 + getAwakenLevel(c)*100) * (c.id==='immortalSanguk'?5:1))}
+function getEquippedWeaponInstances(charId){
+  const ids=Array.isArray(state.equippedWeapons?.[charId])?state.equippedWeapons[charId]:[];
+  return ids.map(uid=>state.weaponInventory.find(w=>w.uid===uid)).filter(Boolean);
+}
+function getWeaponAggregate(charId){
+  if(typeof weaponDefs==='undefined') return {skill:0,hp:0,turns:0,attack:0};
+  const ws=getEquippedWeaponInstances(charId);
+  return ws.reduce((a,w)=>{const d=weaponDefs.find(x=>x.id===w.id); if(!d)return a; const lv=Math.max(0,Math.min(5,Number(w.enhance)||0)); const bonus=(d.bonus||0)+lv*5000; a.skill+=bonus; a.hp+=(d.hp||0); a.turns+=(d.turns||0); a.attack+=d.attack||0; return a;},{skill:0,hp:0,turns:0,attack:0});
+}
+function hasWeaponEquipped(c){return !!c?.jungu && getEquippedWeaponInstances(c.id).length>0;}
+function getActionLimit(c){return 1 + (c?.bossJunGu?4:0) + (isDoubleTurnCharacterBase(c)?1:0) + ((c?.id==='grapplerJunseong'||c?.id==='allrounderJunseong')?1:0) + (c?.id==='asuraOverlordJunseong'?2:0) + getWeaponAggregate(c?.id).turns;}
+function isDoubleTurnCharacterBase(c){return c?.id==='transcendSanguk'||c?.id==='godJunseong';}
+function isDoubleTurnCharacter(c){return getActionLimit(c)>=2;}
+function getSkillDamage(c,i){
+  if(!c || !Array.isArray(c.skills) || !c.skills[i]) return 0;
+  if(c.id==='shinSeungwoo' && i===2) return 0;
+  if(c.id==='godJunseong' && i===0) return 0;
+  if(c.bossJunGu) return Math.floor(c.skills[i][1]);
+  if(c.jungu && !hasWeaponEquipped(c)) return 0;
+  let v=c.skills[i][1] + (getCardLevel(c)-1)*100 + getAwakenLevel(c)*100;
+  if(c.id==='immortalSanguk') v*=5;
+  if(c.jungu) v += getWeaponAggregate(c.id).skill;
+  return Math.floor(v);
+}
+
+function getPersistentHp(c){
+  const max=getBattleHp(c);
+  const raw=Number(state.currentHp?.[c.id]);
+  if(!Number.isFinite(raw)) state.currentHp[c.id]=max;
+  else state.currentHp[c.id]=Math.max(0,Math.min(max,raw));
+  return state.currentHp[c.id];
+}
+
+function isSpecialNoSkill(c){return !!c?.noSkills;}
+function isDoubleTurnCharacter(c){return c?.id==='transcendSanguk'||c?.id==='godJunseong';}
+function isNonOpponent(c){return !!c?.noOpponent || c?.rarity==='SECRET' || c?.rarity==='GOD' && c?.noOpponent;}
+function opponentPoolFor(player){return cards.filter(c=>c.rarity!=='SECRET'&&!c.noOpponent&&c.id!==player.id&&!c.codexHidden);}
+function grantCharacter(id,opts={}){
+  const c=cards.find(x=>x.id===id); if(!c) return;
+  state.owned[id]=(state.owned[id]||0)+1;
+  state.fragments[id]=(state.fragments[id]||0)+1;
+  if(state.levels[id]===undefined) state.levels[id]=opts.level||1;
+  if(state.xp[id]===undefined) state.xp[id]=0;
+  if(opts.awaken!==undefined) state.awakens[id]=opts.awaken;
+  else if(state.awakens[id]===undefined) state.awakens[id]=0;
+  if(c.alwaysAwaken!==undefined) state.awakens[id]=c.alwaysAwaken;
+  state.currentHp[id]=getBattleHp(c);
+  if(!state.selectedId) state.selectedId=id;
+}
+function checkSpecialQuests(){
+  if(!state.specialQuestClaimed.immortalChoi && state.stats.transcendChoiDeaths>=30 && state.stats.jujitaeBossWins>=3){
+    state.specialQuestClaimed.immortalChoi=true;
+    grantCharacter('immortalChoi');
+    appendLog('🛡️ 불멸의 최예강 퀘스트 달성! 즉시 획득했습니다.');
+    setTimeout(()=>showReveal(cards.find(c=>c.id==='immortalChoi'),false),120);
+  }
+  if(!state.specialQuestClaimed.immortalSeungwoo && state.stats.jujitaeBossWins>=10 && getCardLevel(cards.find(c=>c.id==='transcendSeungwoo'))>=50){
+    state.specialQuestClaimed.immortalSeungwoo=true;
+    grantCharacter('immortalSeungwoo');
+    appendLog('♾️ 불멸의 이승우 퀘스트 달성! 즉시 획득했습니다.');
+    setTimeout(()=>showReveal(cards.find(c=>c.id==='immortalSeungwoo'),false),180);
+  }
+  const jonggunLv=getCardLevel(cards.find(c=>c.id==='jonggun'));
+  if(!state.specialQuestClaimed.shirooni && jonggunLv>=50 && state.stats.jonggunStageWins>=10 && state.stats.godBossWins>=10 && getCardLevel(cards.find(c=>c.id==='moon'))>=100){
+    state.specialQuestClaimed.shirooni=true;
+    grantCharacter('shirooni');
+    appendLog('👹 白鬼 시로오니 퀘스트 달성! 즉시 획득했습니다.');
+    setTimeout(()=>showReveal(cards.find(c=>c.id==='shirooni'),false),220);
+  }
+  if(!state.specialQuestClaimed.yamasakiJonggun && state.stats.jonggunStageWins>=100){
+    state.specialQuestClaimed.yamasakiJonggun=true;
+    grantCharacter('yamasakiJonggun');
+    appendLog('👺 백귀 야마자키 종건 퀘스트 달성! 즉시 획득했습니다.');
+    setTimeout(()=>showReveal(cards.find(c=>c.id==='yamasakiJonggun'),false),260);
+  }
+  checkGodQuest();
+  checkAsuraOverlordQuest();
+  save();
+}
+function checkAsuraOverlordQuest(){
+  if(state.specialQuestClaimed.asuraOverlord||ownedCount('asuraOverlordJunseong')>0)return false;
+  const q1=getCardLevel(cards.find(c=>c.id==='grapplerJunseong'))>=200 && getCardLevel(cards.find(c=>c.id==='strikerJunseong'))>=200 && getCardLevel(cards.find(c=>c.id==='allrounderJunseong'))>=200;
+  const q2=state.stats.jihongBossWins>=40;
+  const q3=state.stats.chuuniBossWins>=10;
+  const q4=state.stats.meatMonsterChoiBossWins>=1;
+  const q5=!!state.overlordCodeSeen;
+  if(!(q1&&q2&&q3&&q4&&q5))return false;
+  state.specialQuestClaimed.asuraOverlord=true;
+  grantCharacter('asuraOverlordJunseong');
+  save();
+  setTimeout(()=>showReveal(cards.find(c=>c.id==='asuraOverlordJunseong'),true),160);
+  return true;
+}
+
+function resetEntryTraits(c){
+  playerActionsThisTurn=0;
+  playerGambleApplied=false;
+  playerChanceUsed=false;
+  playerResurrectUsed=false;
+  playerDodgeLeft=(c.id==='junseongX')?3:0;
+  playerMeatShieldUsed=false;
+  playerTranscendChoiInvulTurns=(c.id==='transcendChoi')?3:0;
+  playerImmortalChoiReflectLeft=(c.id==='immortalChoi')?2:0;
+  playerImmortalSeungwooResurrectUsed=false;
+  playerTranscendSangukResurrected=false;
+  playerAbsorbUsed=false;
+  playerImmortalSangukSealTurns=(c.id==='immortalSanguk')?10:0;
+  playerDodgeLeft=(c.id==='junseongX'||c.id==='strikerJunseong'||c.id==='allrounderJunseong')?3:0;
+  playerSealTurns=(c.id==='asuraOverlordJunseong')?3:0;
+  playerRestUsed=false;
+}
+function applySangukAlwaysAwaken(c){
+  if(c.id==='immortalSanguk') state.awakens[c.id]=1000;
+}
+
+function selectCharacter(id){
+  const c=cards.find(x=>x.id===id);
+  if(!c || !ownedCount(id)) return;
+  if(getPersistentHp(c)<=0){
+    alert('이 캐릭터는 HP가 0입니다. 3,000 코인으로 회복한 뒤 선택할 수 있습니다.');
+    openCard(id);
+    return;
+  }
+  state.selectedId=id;
+  applySangukAlwaysAwaken(c);
+  save();
+  renderCollection();
+  closeModal('cardModal');
+}
+function healCharacter(id){
+  const c=cards.find(x=>x.id===id); if(!c||!ownedCount(id)) return;
+  const max=getBattleHp(c), hp=getPersistentHp(c);
+  if(hp>=max){alert('이미 HP가 가득합니다.');return;}
+  if(state.coins<3000){alert('회복에는 3,000 코인이 필요합니다.');return;}
+  state.coins-=3000;
+  state.currentHp[id]=max;
+  save(); renderCollection(); renderAwakening(); openCard(id);
+  playSfx('win');
+}
+
+function healAllCharacters(){
+  const damaged=cards.filter(c=>ownedCount(c.id)>0&&getPersistentHp(c)<getBattleHp(c));
+  if(!damaged.length){
+    alert('회복할 캐릭터가 없습니다. 모든 보유 캐릭터의 HP가 가득합니다.');
+    return;
+  }
+  const cost=damaged.length*3000;
+  if(state.coins<cost){
+    alert(`전체 회복에는 ${cost.toLocaleString()} 코인이 필요합니다. 현재 코인: ${state.coins.toLocaleString()}`);
+    return;
+  }
+  const ok=confirm(`HP가 부족한 캐릭터 ${damaged.length}명을 모두 회복합니다.\n필요 코인: ${cost.toLocaleString()}\n진행할까요?`);
+  if(!ok) return;
+  state.coins-=cost;
+  damaged.forEach(c=>{ state.currentHp[c.id]=getBattleHp(c); });
+  save();
+  renderCollection();
+  renderAwakening();
+  playSfx('win');
+  alert(`✅ 전체 회복 완료! ${damaged.length}명의 캐릭터를 회복했습니다.\n-${cost.toLocaleString()} 코인`);
+}
+function xpRewardForRarity(r){
+  if(r==='X') return 10000;
+  if(r==='GOD') return 10000;
+  if(['Legendary','S','SS','SSS','SSS+'].includes(r)) return 2000;
+  return 500;
+}
+function grantBattleXp(c,amount){
+  if(!c||!amount||c.rarity==='SECRET')return;
+  const prev=getCardLevel(c), maxLv=getMaxLevel(c); if(prev>=maxLv)return;
+  state.xp[c.id]=(state.xp[c.id]||0)+amount; let leveled=false;
+  while(getCardLevel(c)<maxLv){const lvl=getCardLevel(c);const need=c.fixedXp|| (500+(lvl*200));if(state.xp[c.id]<need)break;state.xp[c.id]-=need;state.levels[c.id]=lvl+1;leveled=true;}
+  if(getCardLevel(c)>=maxLv)state.xp[c.id]=0; save();
+  if(leveled){const now=getCardLevel(c);setTimeout(()=>alert(`🎉 ${c.name} 레벨업! Lv.${prev} → Lv.${now}`),120);}
+}
+
+function duplicateReward(c){
+ const map={C:10,COMMON:20,UNCOMMON:30,RARE:50,EPIC:80,Legendary:150,SS:180,SSS:250,'SSS+':350,X:500};
+ return map[c.rarity]||20;
+}
+const achievements=[
+ {id:'first_pull',name:'첫 뽑기',desc:'카드를 1장 뽑기',need:()=>state.stats.pulls>=1,reward:100},
+ {id:'ten_pulls',name:'초보 수집가',desc:'카드를 10장 뽑기',need:()=>state.stats.pulls>=10,reward:300},
+ {id:'first_win',name:'첫 승리',desc:'일반 배틀에서 1회 승리',need:()=>state.stats.wins>=1,reward:150},
+ {id:'ten_wins',name:'배틀 중독',desc:'일반 배틀 10회 승리',need:()=>state.stats.wins>=10,reward:500},
+ {id:'boss_win',name:'보스 격파',desc:'주지태 보스전 1회 승리',need:()=>state.stats.bossWins>=1,reward:1000},
+ {id:'collector',name:'도감 수집가',desc:'카드 15종 이상 보유',need:()=>Object.keys(state.owned).filter(k=>state.owned[k]>0).length>=15,reward:700}
+];
+function checkGodQuest(){
+  const jun=getCardById('junseongX');
+  const ready=!state.godUnlocked && state.stats.jujitaeBossWins>=100 && getCardLevel(jun)>=50 && state.stats.godBossWins>=1;
+  if(ready){ unlockGodReward(); return true; }
+  return false;
+}
+function renderRewards(){
+  checkGodQuest();
+  const dailyBtn=document.getElementById('dailyBtn');
+  const today=localDateKey();
+  const claimed=state.dailyClaim===today;
+  dailyBtn.disabled=claimed;
+  dailyBtn.textContent=claimed?'✅ 오늘 보상 수령 완료':'오늘의 보상 받기';
+  document.getElementById('achievementList').innerHTML=achievements.map(a=>{
+    const done=!!state.achievements[a.id], ready=a.need();
+    return `<div class="skill"><div class="ico">${done?'✅':ready?'🎉':'🔒'}</div><div style="flex:1"><b>${a.name}</b><span>${a.desc} · 보상 ${a.reward} 코인</span></div><button class="btn ${ready&&!done?'primary':''}" ${!ready||done?'disabled':''} onclick="claimAchievement('${a.id}')">${done?'완료':ready?'수령':'진행중'}</button></div>`;
+  }).join('');
+
+  const jun=getCardById('junseongX');
+  const q1=Math.min(50,getCardLevel(jun)), q2=Math.min(100,state.stats.jujitaeBossWins), q3=Math.min(1,state.stats.godBossWins);
+  const unlocked=state.godUnlocked;
+  const qHtml=[
+    `<div class="quest ${q1>=50?'done':''}"><div class="qicon">${q1>=50?'✅':'1'}</div><div class="qbody"><b>김준성의 레벨을 50까지 올린다</b><span>진행도 · Lv.${q1} / 50</span></div></div>`,
+    `<div class="quest ${q2>=100?'done':''}"><div class="qicon">${q2>=100?'✅':'2'}</div><div class="qbody"><b>주지태를 100번 잡는다</b><span>진행도 · ${q2} / 100 승</span></div></div>`,
+    `<div class="quest ${q3>=1?'done':''}"><div class="qicon">${q3>=1?'✅':'3'}</div><div class="qbody"><b>전왕 김준성 보스를 1회 잡는다</b><span>진행도 · ${q3} / 1 승</span></div></div>`
+  ].join('');
+  document.getElementById('godQuestList').innerHTML=qHtml + (unlocked?`<div class="quest done"><div class="qicon">👑</div><div class="qbody"><b>전왕 김준성 획득 완료</b><span>I'AM GOD · 도감에 등록되었습니다.</span></div></div>`:`<div class="trait" style="margin-top:2px"><b>보상:</b> 전왕 김준성 (GOD)</div>`);
+  renderSpecialQuests();
+  const jc=document.getElementById('jonggunClearCount'); if(jc) jc.textContent=state.stats.jonggunStageWins.toLocaleString();
+  const rw=document.getElementById('specialQuestList'); if(rw){rw.innerHTML = (rw.innerHTML||'') + `<div class="quest ${ownedCount('kimJunggu')?'done':''}"><div class="qicon">⚔️</div><div class="qbody"><b>김준구 획득 퀘스트</b><span>월광검 김준구 Lv.${getCardLevel(cards.find(c=>c.id==='moon'))}/50 · 무기 뽑기 ${state.weaponPulls}/1</span></div></div><div class="quest ${ownedCount('weaponGeniusJunggu')?'done':''}"><div class="qicon">🔥</div><div class="qbody"><b>무기의 천재 김준구</b><span>김준구 Lv.${getCardLevel(cards.find(c=>c.id==='kimJunggu'))}/65 · 무기 ${state.weaponPulls}/20 · S+ 이상 ${state.weaponStats.sPlusOrHigher}/1 · 주지태 ${state.stats.jujitaeBossWins}/30 · 김준구 보스 ${state.junGuBossWins}/1</span></div></div><div class="quest ${ownedCount('hwarangJunggu')?'done':''}"><div class="qicon">👑</div><div class="qbody"><b>화랑검 김준구</b><span>화랑검 획득 ${state.weaponHwarangObtained?'✅':'❌'} · 종건 잡기 ${state.stats.jonggunStageWins}/1</span></div></div>`;}
+  checkJunGuQuests();
+}
+
+function getCardById(id){return cards.find(c=>c.id===id)}
+function localDateKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function claimDaily(){
+ const today=localDateKey();
+ if(state.dailyClaim===today)return;
+ state.dailyClaim=today; state.coins+=200; save(); renderRewards(); playSfx('win'); alert('일일보상 +200 코인!');
+}
+function claimAchievement(id){
+ const a=achievements.find(x=>x.id===id); if(!a||state.achievements[id]||!a.need())return;
+ state.achievements[id]=true; state.coins+=a.reward; save(); renderRewards(); playSfx('win'); alert(`${a.name} 달성! +${a.reward} 코인`);
+}
+
+function pull(n){
+ const cost=n===1000?80000:(n===100?8000:(n===10?900:100)); if(state.coins<cost){alert('코인이 부족합니다.');return;} state.coins-=cost;
+ const results=[];
+ let duplicateCoins=0;
+ for(let i=0;i<n;i++){
+   const c=chooseGacha();
+   const before=state.owned[c.id]||0;
+   state.owned[c.id]=before+1;
+   state.fragments[c.id]=(state.fragments[c.id]||0)+1;
+   if(before===0){
+     state.levels[c.id]=1;
+     state.xp[c.id]=0;
+     state.currentHp[c.id]=getBattleHp(c);
+     if(!state.selectedId) state.selectedId=c.id;
+   }
+   if(before>0) duplicateCoins += duplicateReward(c);
+   results.push(c);
+ }
+ state.stats.pulls += n;
+ if(duplicateCoins>0){state.coins += duplicateCoins; setTimeout(()=>alert(`중복 카드 보상!\n+${duplicateCoins} 코인`),180)}
+ save(); playSfx('pull');
+ const best=results.reduce((a,b)=>cardPower(a)>cardPower(b)?a:b);
+ document.getElementById('machineImg').src=best.img;document.getElementById('machineCard').classList.remove('reveal');void document.getElementById('machineCard').offsetWidth;document.getElementById('machineCard').classList.add('reveal');
+ document.getElementById('gachaMessage').textContent=n===1?`${best.rarity} · ${best.name}`:`${n}연차 완료 · 최고 ${best.rarity}`;
+ if(n===1){showReveal(best, false)} else {showMultiReveal(results)}
+ renderCollection(); renderAwakening();
+}
+function showReveal(c,secret){
+ const special=['SSS','SSS+','X','Legendary'].includes(c.rarity)||secret;
+ const specialText=c.id==='junseongX'?`<div class="special-text r-X">I'AM ATOMIC</div>`:'';
+  document.getElementById('revealContent').innerHTML=`<div class="reveal-rarity r-${rarityClass(c.rarity)}">${secret?'SECRET':c.rarity}</div>${specialText}<div class="reveal-name">${c.name}</div><div class="reveal-card ${secret?'SECRET':special?'UR':''}"><img decoding="async" src="${c.img}" alt="${c.name}"></div><p style="color:var(--muted);margin-top:14px">${c.id==='asuraOverlordJunseong'?'숨겨진 SECRET 카드가 도감에 등록되었습니다.':secret?'개발자 전용 카드가 도감에 등록되었습니다.':'카드가 도감에 등록되었습니다.'}</p>`;
+ document.getElementById('revealModal').classList.add('show'); burst(c.id==='junseongX'?70:(special||secret?40:18)); if(special||secret||c.id==='junseongX') playSfx('rare');
+}
+function showMultiReveal(results){
+ const n=results.length;
+ const html=results.map((c,idx)=>`<div class="card" style="cursor:default"><div class="img"><img decoding="async" src="${c.img}" alt="${c.name}" loading="lazy"></div><div class="meta"><div class="name">${idx+1}. ${c.name}</div><div class="rarity r-${rarityClass(c.rarity)}">${c.rarity}</div></div></div>`).join('');
+ const rareCount=results.filter(c=>['Legendary','SS','SSS','SSS+','X'].includes(c.rarity)).length;
+ document.getElementById('revealContent').innerHTML=`<div class="reveal-rarity">${n} PULL</div><div class="reveal-name">승우 ${n}연차 결과</div><p style="color:var(--muted);margin:0 0 12px">최고 등급 <b>${results.reduce((a,b)=>cardPower(a)>cardPower(b)?a:b).rarity}</b> · 고등급 ${rareCount}장</p><div class="gacha-results-grid">${html}</div>`;
+ document.getElementById('revealModal').classList.add('show'); burst(n>=100?45:25); playSfx('rare');
+}
+
+
+weaponDefs=[
+ {id:'chair',name:'의자',rarity:'COMMON',bonus:500},
+ {id:'mop',name:'밀대',rarity:'COMMON',bonus:600},
+ {id:'cup',name:'커피잔',rarity:'COMMON',bonus:400},
+ {id:'shovel',name:'삽',rarity:'UNCOMMON',bonus:800},
+ {id:'chopsticks',name:'쇠젓가락',rarity:'UNCOMMON',bonus:700},
+ {id:'hammer',name:'망치',rarity:'RARE',bonus:1500},
+ {id:'crescentBlade',name:'언월도',rarity:'EPIC',bonus:2000},
+ {id:'rebar',name:'철근',rarity:'EPIC',bonus:3000},
+ {id:'scabbard',name:'검집',rarity:'S',bonus:4500},
+ {id:'bikeChain',name:'자전거 체인',rarity:'S',bonus:3500,turns:1},
+ {id:'wiper',name:'와이퍼',rarity:'SS',bonus:6000,hp:1500},
+ {id:'bicycle',name:'자전거',rarity:'SS',bonus:6500},
+ {id:'steelPipe',name:'쇠파이프',rarity:'SSS',bonus:12000,turns:2},
+ {id:'belt',name:'벨트',rarity:'SSS',bonus:10000,hp:3000},
+ {id:'dagger',name:'단검',rarity:'SSS+',bonus:15000,hp:5000},
+ {id:'spear',name:'창',rarity:'X',bonus:20000,turns:2},
+ {id:'hwarangSword',name:'화랑검',rarity:'GOD',bonus:40000,turns:2,hp:8000,special:'moonlight50'}
+];
+const weaponGachaPool=weaponDefs.filter(w=>w.rarity!=='GOD');
+function chooseWeapon(){
+  const p=Math.random()*100;
+  if(p<0.3) return weaponGachaPool.filter(w=>w.rarity==='X')[Math.floor(Math.random()*weaponGachaPool.filter(w=>w.rarity==='X').length)];
+  const q=(p-0.3)/99.7*100;
+  let group;
+  if(q<37.7) group=['COMMON'];
+  else if(q<61.7) group=['UNCOMMON'];
+  else if(q<79.7) group=['RARE'];
+  else if(q<89.7) group=['EPIC'];
+  else if(q<96.7) group=['S'];
+  else group=['SSS','SSS+'];
+  let arr=weaponGachaPool.filter(w=>group.includes(w.rarity));
+  // SS weapons are included in the same 7% rarity bucket as S.
+  if(group[0]==='S') arr=weaponGachaPool.filter(w=>w.rarity==='S'||w.rarity==='SS');
+  return arr[Math.floor(Math.random()*arr.length)]||weaponGachaPool[0];
+}
+function addWeapon(id,enhance=0){
+  const d=weaponDefs.find(w=>w.id===id); if(!d)return null;
+  const w={uid:`w_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,id,enhance:Math.max(0,Math.min(5,enhance))}; state.weaponInventory.push(w); if(d.rarity==='S'||d.rarity==='SS'||d.rarity==='SSS'||d.rarity==='SSS+'||d.rarity==='X'||d.rarity==='GOD')state.weaponStats.sPlusOrHigher=(state.weaponStats.sPlusOrHigher||0)+1; return w;
+}
+function buyXpPotion(){if(state.coins<10000){alert('코인이 부족합니다.');return;}state.coins-=10000;state.potions.xp2=(state.potions.xp2||0)+1;save();renderShop();renderInventory();alert('🧪 경험치 2배 물약 1개를 구매했습니다.');}
+function weaponIcon(d){const m={chair:'🪑',mop:'🧹',cup:'☕',shovel:'⛏️',chopsticks:'🥢',hammer:'🔨',crescentBlade:'⚔️',rebar:'🪨',scabbard:'🗡️',bikeChain:'⛓️',wiper:'🧽',bicycle:'🚲',steelPipe:'🔩',belt:'🥋',dagger:'🗡️',spear:'🔱',hwarangSword:'⚔️'};return m[d.id]||'⚔️';}
+function weaponEffectText(d,enhance=0){const bonus=(d.bonus||0)+enhance*5000;let parts=[`모든 스킬 +${bonus.toLocaleString()}`];if(d.hp)parts.push(`HP +${d.hp.toLocaleString()}`);if(d.turns)parts.push(`자신의 턴 +${d.turns}`);if(d.special==='moonlight50')parts.push('월광검 50검식 습득');return parts.join(' · ');}
+function showWeaponReveal(w){const d=weaponDefs.find(x=>x.id===w.id);if(!d)return;const high=rarityOrder(d.rarity)>=rarityOrder('SSS');const cls=rarityOrder(d.rarity)>=rarityOrder('X')?'X':high?'UR':'';document.getElementById('revealContent').innerHTML=`<div class="weapon-reveal-wrap"><div class="weapon-reveal-rarity r-${rarityClass(d.rarity)}">WEAPON ${d.rarity}</div><div class="weapon-reveal-name">${d.name}</div><div class="weapon-reveal-card ${cls}"><div class="weapon-reveal-icon">${weaponIcon(d)}</div><div class="weapon-reveal-bonus">${weaponEffectText(d,w.enhance)}</div><div class="weapon-reveal-desc">+0강 · 중복 무기도 각각 별도 보관됩니다.</div></div></div>`;document.getElementById('revealModal').classList.add('show');burst(high?45:22);if(high)playSfx('rare');}
+function showWeaponMultiReveal(results){const counts={};results.forEach(w=>{counts[w.id]=(counts[w.id]||0)+1});const sorted=results.slice().sort((a,b)=>rarityOrder(weaponDefs.find(x=>x.id===b.id).rarity)-rarityOrder(weaponDefs.find(x=>x.id===a.id).rarity));const best=weaponDefs.find(x=>x.id===sorted[0].id);const html=results.map((w,i)=>{const d=weaponDefs.find(x=>x.id===w.id);return `<div class="weapon-result-tile"><div class="ico">${weaponIcon(d)}</div><div class="nm">${i+1}. ${d.name}</div><div class="rr r-${rarityClass(d.rarity)}">${d.rarity}</div><div class="ef">${weaponEffectText(d,w.enhance)}</div></div>`}).join('');const totalUnique=Object.keys(counts).length;const dup=results.length-totalUnique;document.getElementById('revealContent').innerHTML=`<div class="reveal-rarity">${results.length} PULL</div><div class="reveal-name">⚔️ 무기 뽑기 결과</div><p style="color:var(--muted);margin:0 0 12px">최고 등급 <b class="r-${rarityClass(best.rarity)}">${best.rarity}</b> · 최고 무기 <b>${best.name}</b><br><span class="weapon-result-count">총 ${results.length}개 · 종류 ${totalUnique}종 · 중복 ${dup}개</span></p><div class="weapon-results-grid">${html}</div>`;document.getElementById('revealModal').classList.add('show');burst(results.length>=100?50:30);playSfx('rare');}
+
+function pullWeapon(n){const cost=n===100?800000:(n===10?90000:10000); if(state.coins<cost){alert('코인이 부족합니다.');return;}state.coins-=cost;const results=[];for(let i=0;i<n;i++){const w=chooseWeapon();const item=addWeapon(w.id);results.push(item);}state.weaponPulls+=n;save();renderShop();renderInventory();checkJunGuQuests();if(n===1){showWeaponReveal(results[0]);}else{showWeaponMultiReveal(results);}}
+function rarityOrder(r){return ({COMMON:1,UNCOMMON:2,RARE:3,EPIC:4,S:5,SS:6,SSS:7,'SSS+':8,X:9,GOD:10})[r]||0;}
+function canEquipWeaponTo(cId,w){return ['kimJunggu','weaponGeniusJunggu','hwarangJunggu'].includes(cId)&&!!w;}
+function equipWeapon(uid,charId){const w=state.weaponInventory.find(x=>x.uid===uid);if(!w||!canEquipWeaponTo(charId,w))return;const arr=Array.isArray(state.equippedWeapons[charId])?state.equippedWeapons[charId]:[];const d=weaponDefs.find(x=>x.id===w.id);const limit=rarityOrder(d.rarity)>=rarityOrder('S')?2:1;if(arr.includes(uid)){state.equippedWeapons[charId]=arr.filter(x=>x!==uid);}else{if(arr.length>=limit){alert(`${d.rarity} 등급 이상 무기는 최대 ${limit}개까지 장착할 수 있습니다.`);return;}arr.push(uid);state.equippedWeapons[charId]=arr;}save();renderInventory();renderCollection();if(playerCard&&['kimJunggu','weaponGeniusJunggu','hwarangJunggu'].includes(charId))renderBattle();}
+function strengthenWeapon(uid){const w=state.weaponInventory.find(x=>x.uid===uid);if(!w)return;const d=weaponDefs.find(x=>x.id===w.id);if(!d)return;if(w.enhance>=5){alert('이미 5강입니다.');return;}if(state.coins<10000){alert('강화 비용이 부족합니다.');return;}state.coins-=10000;const successRate=[1,.75,.5,.35,.15][w.enhance]||.15;if(Math.random()<successRate){w.enhance++;save();renderInventory();renderShop();alert(`✅ ${d.name} 강화 성공! +${w.enhance}강`);}else{const idx=state.weaponInventory.indexOf(w);if(idx>=0)state.weaponInventory.splice(idx,1);for(const k of Object.keys(state.equippedWeapons)){state.equippedWeapons[k]=(state.equippedWeapons[k]||[]).filter(x=>x!==uid);}save();renderInventory();renderShop();alert(`💥 ${d.name} 강화 실패! 무기가 파괴되었습니다.`);}}
+function useLoot(kind){
+ const n=Number(state.loot?.[kind]||0); if(n<=0)return;
+ if(kind==='heal'){
+   if(!playerCard){alert('먼저 캐릭터를 선택하세요.');return;}
+   state.currentHp[playerCard.id]=getBattleHp(playerCard); state.loot.heal--; save();
+ }else if(kind==='fullRevive'){
+   cards.forEach(c=>{if(ownedCount(c.id)>0)state.currentHp[c.id]=getBattleHp(c);}); state.loot.fullRevive--; save();
+ }else if(kind==='awakeningStone'){
+   const id=prompt('각성할 캐릭터 ID를 입력하세요.');
+   if(!id||!cards.find(c=>c.id===id)||!ownedCount(id))return;
+   state.awakens[id]=(state.awakens[id]||0)+1; state.loot.awakeningStone--; save();
+ }else if(kind==='fearStone'){
+   openFearStoneTargetPicker(); return;
+ }else if(kind==='enhanceStone'){
+   const id=prompt('공격력을 +1000 할 캐릭터 ID를 입력하세요.');
+   if(!id||!cards.find(c=>c.id===id)||!ownedCount(id))return;
+   state.attackBonus[id]=(state.attackBonus[id]||0)+1000; state.loot.enhanceStone--; save();
+ }
+ renderInventory(); renderCollection();
+}
+
+function openFearStoneTargetPicker(){
+ const owned=cards.filter(c=>c.rarity!=='SECRET'&&ownedCount(c.id)>0);
+ if(!owned.length){alert('획득한 캐릭터가 없습니다.');return;}
+ const currentTraits=state.traits||{};
+ const html=`<div class="section-head" style="margin-top:0"><div><h3>💎 두려움 특징의 돌</h3><p>두려움 특성을 부여할 캐릭터를 선택하세요.</p></div></div>
+ <div class="trait" style="margin-top:0"><b>효과</b><br>선택한 캐릭터가 공격할 때 피해가 2배로 적용됩니다.</div>
+ <div class="card-grid" style="margin-top:14px;grid-template-columns:repeat(3,minmax(0,1fr));">${owned.map(c=>{
+   const hasFear=String(currentTraits[c.id]||'').includes('두려움');
+   const lvl=getCardLevel(c);
+   return `<button class="card" type="button" style="text-align:left" onclick="applyFearStone('${c.id}')">
+     <div class="img"><img decoding="async" src="${c.img}" alt="${c.name}"></div>
+     <div class="meta"><div class="name">${c.name}</div><div class="rarity r-${rarityClass(c.rarity)}">${c.rarity} · Lv.${lvl}</div><div class="small-note" style="margin-top:5px">${hasFear?'✅ 두려움 보유':'두려움 부여 가능'}</div></div>
+   </button>`;
+ }).join('')}</div>
+ <div class="buttons" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="closeModal('cardModal')">취소</button></div>`;
+ document.getElementById('cardModalContent').innerHTML=html;
+ document.getElementById('cardModal').classList.add('show');
+}
+
+function applyFearStone(id){
+ const c=cards.find(x=>x.id===id); if(!c||!ownedCount(id)||Number(state.loot?.fearStone||0)<=0)return;
+ const existing=String(state.traits?.[id]||'');
+ if(existing.includes('두려움')){alert(`${c.name}은(는) 이미 두려움 특성을 가지고 있습니다.`);return;}
+ state.traits[id]=existing?`${existing} · 두려움`:'두려움';
+ state.loot.fearStone--;
+ save(); closeModal('cardModal'); renderInventory(); renderCollection();
+ alert(`💎 두려움 특징의 돌 사용 완료!
+${c.name}에게 두려움 특성이 부여되었습니다.`);
+}
+function renderShop(){const el=document.getElementById('shopWeaponList');if(!el)return;el.innerHTML=weaponDefs.map(w=>`<div class="weapon-row"><div class="weapon-main"><b>${w.name} <span class="weapon-badge r-${rarityClass(w.rarity)}">${w.rarity}</span></b><span>모든 스킬 +${w.bonus.toLocaleString()}${w.hp?` · HP +${w.hp.toLocaleString()}`:''}${w.turns?` · 자신의 턴 +${w.turns}`:''}</span></div><div class="weapon-actions"><span class="small-note">보유 ${state.weaponInventory.filter(x=>x.id===w.id).length}</span></div></div>`).join('');}
+function renderInventory(){const eq=document.getElementById('weaponEquipContent');if(!eq)return;const chars=cards.filter(c=>['kimJunggu','weaponGeniusJunggu','hwarangJunggu'].includes(c.id));let html=chars.map(c=>{const arr=getEquippedWeaponInstances(c.id);const slots=arr.map(w=>{const d=weaponDefs.find(x=>x.id===w.id);return `<div class="inventory-item"><h4>${d.name} <span class="weapon-level">+${w.enhance}</span></h4><p>${d.rarity} · 모든 스킬 +${(d.bonus+w.enhance*5000).toLocaleString()}${d.hp?` · HP +${d.hp.toLocaleString()}`:''}${d.turns?` · 턴 +${d.turns}`:''}</p><div class="buttons"><button class="btn" onclick="equipWeapon('${w.uid}','${c.id}')">해제</button><button class="btn" onclick="strengthenWeapon('${w.uid}')">강화 · 10,000</button></div></div>`}).join('');return `<div class="panel" style="margin-bottom:10px"><div class="detail-title">${c.name}</div><div class="detail-sub">장착 ${arr.length}/${getEquipLimitForCharacter(c.id)}</div>${slots||'<div class="empty">장착된 무기 없음</div>'}<div class="buttons" style="margin-top:10px">${state.weaponInventory.map(w=>{const d=weaponDefs.find(x=>x.id===w.id);const equipped=arr.some(x=>x.uid===w.uid);return `<button class="btn ${equipped?'selected':''}" onclick="equipWeapon('${w.uid}','${c.id}')">${equipped?'✅':'⚔️'} ${d.name} +${w.enhance}</button>`}).join('')}</div></div>`}).join('');eq.innerHTML=html||'<div class="empty">김준구 3종을 획득하면 장비를 사용할 수 있습니다.</div>';const loot=document.getElementById('lootInventory');if(loot){const items=[['heal','회복 물약','현재 캐릭터 HP를 최대치로 회복'],['fearStone','두려움 특징의 돌','원하는 캐릭터에게 두려움 특성 부여'],['enhanceStone','강화석','원하는 캐릭터 공격력 +1,000'],['fullRevive','전체 부활석','보유 중인 모든 캐릭터 HP 완전 회복'],['awakeningStone','각성석','원하는 캐릭터 1회 각성']];loot.innerHTML=items.map(([k,n,d])=>`<div class="inventory-item"><h4>${n} × ${Number(state.loot[k]||0)}</h4><p>${d}</p><button class="btn" ${(state.loot[k]||0)<=0?'disabled':''} onclick="useLoot('${k}')">사용</button></div>`).join('');}}
+function getEquipLimitForCharacter(charId){const arr=state.equippedWeapons[charId]||[];return arr.some(uid=>{const w=state.weaponInventory.find(x=>x.uid===uid);const d=w&&weaponDefs.find(x=>x.id===w.id);return d&&rarityOrder(d.rarity)>=rarityOrder('S');})?2:1;}
+function checkJunGuQuests(){
+ const j=cards.find(c=>c.id==='kimJunggu'), g=cards.find(c=>c.id==='weaponGeniusJunggu');
+ const sPlus=Number(state.weaponStats.sPlusOrHigher||0)>=1;
+ if(ownedCount(j?.id)===0&&getCardLevel(cards.find(c=>c.id==='moon'))>=50&&state.weaponPulls>=1){state.junGuQuestClaimed.kim=true;grantCharacter('kimJunggu');}
+ if(ownedCount(g?.id)===0&&getCardLevel(j)>=65&&state.weaponPulls>=20&&sPlus&&state.stats.jujitaeBossWins>=30&&state.junGuBossWins>=1){state.junGuQuestClaimed.genius=true;grantCharacter('weaponGeniusJunggu');}
+ if(ownedCount('hwarangJunggu')===0&&state.weaponHwarangObtained&&state.stats.jonggunStageWins>=1){state.junGuQuestClaimed.hwarang=true;grantCharacter('hwarangJunggu');}
+ save();renderCollection();
+}
+function grantWeaponLoot(enemyId){state.killsById[enemyId]=(state.killsById[enemyId]||0)+1;const r=Math.random();if(r<0.10){state.loot.heal=(state.loot.heal||0)+1;}if(enemyId==='jujitae'&&Math.random()<0.30)state.loot.fearStone=(state.loot.fearStone||0)+1;if(enemyId==='jon'&&Math.random()<0.15)state.loot.enhanceStone=(state.loot.enhanceStone||0)+1;if(enemyId==='shinSeungwoo'&&Math.random()<0.20)state.loot.fullRevive=(state.loot.fullRevive||0)+1;if(enemyId==='junseongX'&&Math.random()<0.30)state.loot.awakeningStone=(state.loot.awakeningStone||0)+1;if(enemyId==='godJunseong')state.loot.awakeningStone=(state.loot.awakeningStone||0)+1;}
+
+function startJunGuBossBattle(){
+ bossMode=true;godBossMode=false;jonggunBossMode=false;freeJujitaeBossMode=false;junGuBossMode=true;customBossMode=false;customBossId=null;customChoiReflectLeft=0;customChoiShieldTurns=0;jonggunPage=0;
+ const owned=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong')&&ownedCount(c.id)>0&&getPersistentHp(c)>0); if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
+ if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0)playerCard=cards.find(c=>c.id===state.selectedId);else{playerCard=owned[0];state.selectedId=playerCard.id;}
+ enemyCard={id:'junGuBoss',name:'김준구 · 화랑검 김준구',rarity:'GOD BOSS',img:'assets/hwarang_junggu.png',hp:136000,atk:30000,def:30000,trait:'화랑검 5강 ×2',trait2:'상대 턴 5회 봉인 · 100% 치명타',trait3:'월광검 제 0 검식 · 사망 시 상대도 사망',skills:[['제 1검 초월(初月)',140000,0],['제 2검 현월(弦月)',144000,0],['제 3검 만월(滿月)',146000,0],['월광검 50검식',230000,0]],bossJunGu:true,customMaxLevel:200};
+ initBattleStats(true);document.getElementById('battleLog').innerHTML='';go('battle');renderBattleSelector();renderBattle();appendLog('👑 김준구 잡기 시작! 화랑검 김준구 · 화랑검 5강 ×2');
+}
+function resolveJunGuBossEnemyStats(){if(!junGuBossMode)return;const temp=enemyCard;if(temp._forcedWeapons){const old=state.equippedWeapons[temp.id];state.equippedWeapons[temp.id]=temp._forcedWeapons;enemyCard=temp;playerBattleMaxHp=playerBattleMaxHp;state.equippedWeapons[temp.id]=old||[];}}
+function redeemDeveloperCode(){
+  const input=document.getElementById('developerCodeInput');
+  const msg=document.getElementById('developerCodeMsg');
+  const raw=input.value.trim();
+  const code=raw.toLowerCase();
+  if(code==='coincoin'){
+    if(state.redeemedCodes.coincoin){msg.textContent='ℹ️ 이 코드는 이미 사용되었습니다.';return;}
+    state.coins += 1000000;
+    state.redeemedCodes.coincoin=true;
+    save();
+    msg.textContent='✅ 1,000,000 코인을 지급했습니다!';
+    playSfx('rare');
+    input.value='';
+    updateTop();
+    return;
+  }
+  if(code==='sword'){
+    addWeapon('hwarangSword'); state.weaponHwarangObtained=true; save(); msg.textContent='✅ 화랑검을 획득했습니다! (코드 사용 제한 없음)'; playSfx('rare'); input.value=''; renderShop(); renderInventory(); checkJunGuQuests(); return;
+  }
+  if(code==='1035048320'){
+    if(state.redeemedCodes.xCode){msg.textContent='ℹ️ 이 개발자 코드는 이미 사용되었습니다.';return;}
+    const xCards=cards.filter(c=>c.rarity==='X'&&!c.specialCode);
+    xCards.forEach(c=>grantCharacter(c.id));
+    state.redeemedCodes.xCode=true;
+    save(); msg.textContent='✅ 기존 X 등급 카드 4종을 지급했습니다!'; playSfx('rare'); input.value=''; renderCollection();renderAwakening();return;
+  }
+  if(code==='overlord'){
+    if(state.overlordCodeSeen){msg.textContent='ℹ️ Asura Overlord of Combat 鬪神霸王 자격이 이미 해금되어 있습니다.';return;}
+    state.overlordCodeSeen=true;
+    save();
+    msg.textContent='⚔️ Asura Overlord of Combat 鬪神霸王';
+    playSfx('rare');
+    input.value='';
+    checkAsuraOverlordQuest();
+    return;
+  }
+  const special={
+    'go beyond':{id:'transcendSeungwoo',key:'goBeyond',label:'초월자 이승우'},
+    'see bar':{id:'transcendChoi',key:'seeBar',label:'초월자 최예강'},
+    'god sanguk':{id:'transcendSanguk',key:'godSanguk',label:'초월자 박상욱'},
+    'level 99':{id:'immortalSanguk',key:'level99',label:'불멸의 박상욱'},
+    'korea11':{id:'transcendJuwan',key:'korea11',label:'초월자 김주완'}
+  }[code];
+  if(!special){msg.textContent='❌ 올바른 개발자 코드가 아닙니다.';playSfx('bad');return;}
+  if(state.redeemedCodes[special.key]){msg.textContent='ℹ️ 이 코드는 이미 사용되었습니다.';return;}
+  if(special.id==='immortalSanguk') grantCharacter(special.id,{awaken:1000});
+  else grantCharacter(special.id);
+  state.redeemedCodes[special.key]=true;
+  applySangukAlwaysAwaken(cards.find(c=>c.id===special.id));
+  save(); msg.textContent=`✅ ${special.label}을(를) 즉시 획득했습니다!`; playSfx('rare'); input.value=''; renderCollection();renderAwakening();renderBattleSelector();
+  setTimeout(()=>showReveal(cards.find(c=>c.id===special.id),false),120);
+}
+
+function unlockSecret(){const v=document.getElementById('devCode').value.trim();if(v==='SW-DEV-2026'){state.secret=true;state.owned.secret=(state.owned.secret||0)+1;save();document.getElementById('devMsg').textContent='✅ SECRET 승우가 지급되었습니다!';playSfx('rare');setTimeout(()=>{closeModal('devModal');showReveal(cards.find(c=>c.id==='secret'),true);renderCollection()},500)}else{document.getElementById('devMsg').textContent='❌ 코드가 아닙니다.';playSfx('bad')}}
+
+function renderAwakening(){
+  const candidates=cards.filter(c=>c.rarity!=='SECRET'&&ownedCount(c.id)>=3&&c.alwaysAwaken===undefined);
+  if(!candidates.length){document.getElementById('awakeningContent').innerHTML='<div class="empty">각성 가능한 카드가 아직 없습니다.<br>같은 카드를 3장 이상 모아보세요.</div>';return;}
+  document.getElementById('awakeningContent').innerHTML=candidates.map(c=>{const awakened=state.awakens[c.id]||0;return `<div class="panel" style="margin-bottom:12px"><div class="card big"><div class="img"><img decoding="async" src="${c.img}" alt="${c.name}"></div><div><div class="detail-title">${c.name}</div><div class="detail-sub r-${rarityClass(c.rarity)}">${c.rarity} · 각성 ${awakened} · Lv.${getCardLevel(c)}/${getMaxLevel(c)}</div><div class="stats"><div class="stat"><b>${getBattleHp(c)}</b><span>현재 HP</span></div><div class="stat"><b>${getBattleAtk(c)}</b><span>현재 ATK</span></div><div class="stat"><b>${getBattleDef(c)}</b><span>현재 DEF</span></div></div><div class="trait"><b>각성 효과</b><br>각성 1회마다 HP/ATK/DEF +100<br>모든 스킬 피해 +100</div><div class="buttons"><button class="btn primary" onclick="awaken('${c.id}')">✨ 각성하기 · 조각 3개</button></div></div></div></div>`}).join('');
+  if(ownedCount('immortalSanguk')>0){document.getElementById('awakeningContent').innerHTML += `<div class="panel" style="margin-bottom:12px"><div class="trait"><b>불멸의 박상욱</b><br>획득 즉시 각성 1000 · 수동 각성 불가</div></div>`;}
+}
+
+function awaken(id){
+  const c=cards.find(x=>x.id===id); if(!c)return;
+  if(c.alwaysAwaken!==undefined){alert('이 캐릭터는 획득 즉시 각성 상태가 적용됩니다.');return;}
+  if((state.fragments[id]||0)<3){alert('조각이 부족합니다.');return;}
+  state.fragments[id]-=3;state.awakens[id]=(state.awakens[id]||0)+1;save();playSfx('rare');renderAwakening();openCard(id)
+}
+
+
+function buyAllrounderJunseong(){
+  const c=getCardById('allrounderJunseong');
+  const g=getCardById('grapplerJunseong');
+  const s=getCardById('strikerJunseong');
+  if(!c||!g||!s)return;
+  const ready=getCardLevel(g)>=50&&getCardLevel(s)>=50&&state.stats.jujitaeBossWins>=20&&state.stats.godBossWins>=5;
+  if(!ready){alert('올라운더 김준성의 퀘스트를 모두 클리어해야 합니다.');return;}
+  if(ownedCount(c.id)>0){alert('이미 올라운더 김준성을 보유하고 있습니다.');return;}
+  if(state.coins<2000000){alert('코인이 부족합니다. 2,000,000 코인이 필요합니다.');return;}
+  state.coins-=2000000;
+  state.specialQuestClaimed.allrounderJunseong=true;
+  grantCharacter(c.id);
+  save(); renderCollection(); renderAwakening(); renderRewards(); renderBattleSelector(true);
+  alert('🔥 올라운더 김준성을 획득했습니다!');
+  setTimeout(()=>showReveal(c,false),120);
+}
+
+function buyFreeJujitaeGod(){
+  const c=getCardById('freeJujitaeGod'); const j=getCardById('jujitae');
+  if(!c||!j)return;
+  const ready=getCardLevel(j)>=100&&state.stats.jujitaeBossWins>=200&&state.junGuBossWins>=40&&state.stats.jonggunStageWins>=5&&state.stats.freeJujitaeBossWins>=1&&getAwakenLevel(j)>=5;
+  if(!ready){alert('자유의 주지태 퀘스트를 모두 클리어해야 합니다.');return;}
+  if(ownedCount(c.id)>0){alert('이미 자유의 주지태 · GOD를 보유하고 있습니다.');return;}
+  if(state.coins<3000000){alert('코인이 부족합니다. 3,000,000 코인이 필요합니다.');return;}
+  state.coins-=3000000;
+  state.specialQuestClaimed.freeJujitaePurchased=true;
+  grantCharacter(c.id);
+  save(); renderCollection(); renderAwakening(); renderRewards();
+  alert('👑 자유의 주지태 · GOD를 획득했습니다!');
+}
+
+function renderSpecialQuests(){
+  const el=document.getElementById('specialQuestList'); if(!el)return;
+  const aDone=!!state.specialQuestClaimed.immortalChoi;
+  const bDone=!!state.specialQuestClaimed.immortalSeungwoo;
+  const cDone=!!state.specialQuestClaimed.shirooni;
+  const dDone=!!state.specialQuestClaimed.yamasakiJonggun;
+  const p1=Math.min(30,state.stats.transcendChoiDeaths);
+  const p2=Math.min(3,state.stats.jujitaeBossWins);
+  const p3=Math.min(10,state.stats.jujitaeBossWins);
+  const p4=Math.min(50,getCardLevel(cards.find(c=>c.id==='transcendSeungwoo')));
+  const jonggunLv=Math.min(50,getCardLevel(cards.find(c=>c.id==='jonggun')));
+  const jonggunClears=Math.min(100,state.stats.jonggunStageWins);
+  const godClears=Math.min(10,state.stats.godBossWins);
+  const moonLv=Math.min(100,getCardLevel(cards.find(c=>c.id==='moon')));
+  el.innerHTML=`
+    <div class="quest ${aDone?'done':''}"><div class="qicon">${aDone?'✅':'A'}</div><div class="qbody"><b>불멸의 최예강 — 퀘스트 1</b><span>초월자 최예강을 사용하여 30회 사망 · ${p1} / 30</span></div></div>
+    <div class="quest ${p2>=3?'done':''}"><div class="qicon">${p2>=3?'✅':'B'}</div><div class="qbody"><b>불멸의 최예강 — 퀘스트 2</b><span>주지태를 3회 처치 · ${p2} / 3</span></div></div>
+    <div class="quest ${bDone?'done':''}"><div class="qicon">${bDone?'✅':'C'}</div><div class="qbody"><b>불멸의 이승우 — 퀘스트 1</b><span>주지태를 10회 처치 · ${p3} / 10</span></div></div>
+    <div class="quest ${p4>=50?'done':''}"><div class="qicon">${p4>=50?'✅':'D'}</div><div class="qbody"><b>불멸의 이승우 — 퀘스트 2</b><span>초월자 이승우를 Lv.50까지 강화 · Lv.${p4} / 50</span></div></div>
+    <div class="quest ${jonggunLv>=50?'done':''}"><div class="qicon">${jonggunLv>=50?'✅':'1'}</div><div class="qbody"><b>白鬼 시로오니 — 퀘스트 1</b><span>박종건을 Lv.50까지 올린다 · Lv.${jonggunLv} / 50</span></div></div>
+    <div class="quest ${jonggunClears>=10&&godClears>=10?'done':''}"><div class="qicon">${jonggunClears>=10&&godClears>=10?'✅':'2'}</div><div class="qbody"><b>白鬼 시로오니 — 퀘스트 2</b><span>종건 잡기 ${jonggunClears} / 10회 · 전왕 김준성 ${godClears} / 10회</span></div></div>
+    <div class="quest ${moonLv>=100?'done':''}"><div class="qicon">${moonLv>=100?'✅':'3'}</div><div class="qbody"><b>白鬼 시로오니 — 퀘스트 3</b><span>월광검 김준구를 Lv.100까지 올린다 · Lv.${moonLv} / 100</span></div></div>
+    <div class="quest ${dDone?'done':''}"><div class="qicon">${dDone?'✅':'4'}</div><div class="qbody"><b>백귀 야마자키 종건 — 퀘스트 1</b><span>종건 잡기 스테이지를 100회 클리어한다 · ${jonggunClears} / 100</span></div></div>
+    ${cDone?'<div class="trait"><b>보상 수령 완료</b> · 白鬼 시로오니 (X)</div>':''}
+    ${(()=>{
+      const j=getCardById('jujitae'), fj=getCardById('freeJujitaeGod');
+      const q1=getCardLevel(j)>=100, q2=state.stats.jujitaeBossWins>=200, q3=state.junGuBossWins>=40, q4=state.stats.jonggunStageWins>=5, q5=state.stats.freeJujitaeBossWins>=1, q6=getAwakenLevel(j)>=5;
+      const all=q1&&q2&&q3&&q4&&q5&&q6;
+      const owned=ownedCount(fj)>0;
+      const claimed=!!state.specialQuestClaimed.freeJujitaePurchased;
+      return `
+        <div class="quest ${q1?'done':''}"><div class="qicon">${q1?'✅':'1'}</div><div class="qbody"><b>자유의 주지태 — 퀘스트 1</b><span>'주지태'를 Lv.100까지 올린다 · Lv.${Math.min(100,getCardLevel(j))} / 100</span></div></div>
+        <div class="quest ${q2?'done':''}"><div class="qicon">${q2?'✅':'2'}</div><div class="qbody"><b>자유의 주지태 — 퀘스트 2</b><span>주지태 보스를 200회 처치한다 · ${Math.min(200,state.stats.jujitaeBossWins)} / 200</span></div></div>
+        <div class="quest ${q3?'done':''}"><div class="qicon">${q3?'✅':'3'}</div><div class="qbody"><b>자유의 주지태 — 퀘스트 3</b><span>김준구 보스를 40회 처치한다 · ${Math.min(40,state.junGuBossWins)} / 40</span></div></div>
+        <div class="quest ${q4?'done':''}"><div class="qicon">${q4?'✅':'4'}</div><div class="qbody"><b>자유의 주지태 — 퀘스트 4</b><span>종건 잡기를 5회 클리어한다 · ${Math.min(5,state.stats.jonggunStageWins)} / 5</span></div></div>
+        <div class="quest ${q5?'done':''}"><div class="qicon">${q5?'✅':'5'}</div><div class="qbody"><b>자유의 주지태 — 퀘스트 5</b><span>자유의 주지태 보스를 1회 클리어한다 · ${Math.min(1,state.stats.freeJujitaeBossWins)} / 1</span></div></div>
+        <div class="quest ${q6?'done':''}"><div class="qicon">${q6?'✅':'6'}</div><div class="qbody"><b>자유의 주지태 — 퀘스트 6</b><span>'주지태' 캐릭터를 5각성 한다 · ${Math.min(5,getAwakenLevel(j))} / 5</span></div></div>
+        <div class="panel" style="margin-top:10px"><div class="trait"><b>획득 방법</b><br>퀘스트 6개를 모두 클리어하면 <b>자유의 주지태 · GOD</b>를 3,000,000 코인에 구매할 수 있습니다.<br>※ 뽑기에서는 획득할 수 없습니다.</div>
+        ${owned||claimed?`<div class="buttons"><button class="btn" disabled>✅ 자유의 주지태 · GOD 획득 완료</button></div>`:all?`<div class="buttons"><button class="btn primary" onclick="buyFreeJujitaeGod()">👑 자유의 주지태 · GOD 구매 · 3,000,000 코인</button></div>`:`<div class="buttons"><button class="btn" disabled>🔒 퀘스트 6개를 모두 클리어하세요</button></div>`}</div>
+    <div class="panel" style="margin-top:10px"><div class="trait"><b>🔥 올라운더 김준성 · GOD</b><br>퀘스트 1: 그래플러 김준성 Lv.50 + 타격의 김준성 Lv.50<br>퀘스트 2: 주지태 보스 20회 + 전왕 김준성 보스 5회<br>보상: 올라운더 김준성 구매 권한 · 2,000,000 코인</div>${(()=>{const g=getCardById('grapplerJunseong'), s=getCardById('strikerJunseong'), c=getCardById('allrounderJunseong'); const q1=getCardLevel(g)>=50&&getCardLevel(s)>=50, q2=state.stats.jujitaeBossWins>=20&&state.stats.godBossWins>=5, owned2=ownedCount(c.id)>0, ready=q1&&q2; return `<div class="quest ${q1?'done':''}"><div class="qicon">${q1?'✅':'1'}</div><div class="qbody"><b>올라운더 김준성 — 퀘스트 1</b><span>그래플러 Lv.${Math.min(50,getCardLevel(g))}/50 · 타격의 Lv.${Math.min(50,getCardLevel(s))}/50</span></div></div><div class="quest ${q2?'done':''}"><div class="qicon">${q2?'✅':'2'}</div><div class="qbody"><b>올라운더 김준성 — 퀘스트 2</b><span>주지태 ${Math.min(20,state.stats.jujitaeBossWins)}/20회 · 전왕 김준성 ${Math.min(5,state.stats.godBossWins)}/5회</span></div></div>${owned2?`<div class="buttons"><button class="btn" disabled>✅ 올라운더 김준성 획득 완료</button></div>`:ready?`<div class="buttons"><button class="btn primary" onclick="buyAllrounderJunseong()">🔥 올라운더 김준성 구매 · 2,000,000 코인</button></div>`:`<div class="buttons"><button class="btn" disabled>🔒 퀘스트 2개를 모두 클리어하세요</button></div>`}</div>`;})()}</div>`;
+    })()}`;
+}
+let battleSelectorKey='';
+function renderBattleSelector(force=false){
+ const grid=document.getElementById('battleCharacterGrid');
+ if(!grid)return;
+ const candidates=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong'&&ownedCount(c.id)>0)&&ownedCount(c.id)>0);
+ const key=candidates.map(c=>c.id).join('|');
+ if(force||grid.dataset.key!==key){
+   grid.dataset.key=key;
+   if(!candidates.length){
+     grid.innerHTML='<div class="empty" style="grid-column:1/-1;padding:18px">획득한 캐릭터가 없습니다.</div>';
+     document.getElementById('battleSelectedName').textContent='사용 가능한 캐릭터 없음';
+     return;
+   }
+   grid.innerHTML=candidates.map(c=>`<button class="battle-character" data-battle-id="${c.id}" type="button" onclick="selectBattleCharacter('${c.id}')">
+     <img decoding="async" src="${c.img}" alt="${c.name}" loading="lazy">
+     <div class="bc-meta">
+       <div class="bc-name">${c.name}</div>
+       <div class="bc-rarity r-${rarityClass(c.rarity)}">${c.rarity}</div>
+       <div class="bc-hp">HP</div>
+     </div>
+   </button>`).join('');
+ }
+ const current=state.selectedId?cards.find(c=>c.id===state.selectedId):null;
+ const nameEl=document.getElementById('battleSelectedName');
+ if(nameEl)nameEl.textContent=current?`현재 선택 · ${current.name}`:'캐릭터를 선택하세요';
+ grid.querySelectorAll('[data-battle-id]').forEach(btn=>{
+   const c=cards.find(x=>x.id===btn.dataset.battleId); if(!c)return;
+   const hp=getPersistentHp(c), max=getBattleHp(c), disabled=hp<=0, active=current&&current.id===c.id;
+   btn.classList.toggle('active',!!active); btn.classList.toggle('disabled',disabled); btn.disabled=disabled;
+   let badge=btn.querySelector('.bc-check');
+   if(active&&!badge){badge=document.createElement('span');badge.className='bc-check';badge.textContent='사용 중';btn.prepend(badge);}
+   if(!active&&badge)badge.remove();
+   const hpEl=btn.querySelector('.bc-hp'); if(hpEl)hpEl.textContent=`HP ${hp.toLocaleString()} / ${max.toLocaleString()}`;
+ });
+}
+function selectBattleCharacter(id){
+  const c=cards.find(x=>x.id===id);
+  if(!c||!ownedCount(id)||(c.rarity==='SECRET'&&c.id!=='asuraOverlordJunseong')||getPersistentHp(c)<=0)return;
+  if(!battleOver && playerHp>0){alert('현재 캐릭터가 쓰러진 뒤 다른 캐릭터로 이어서 싸울 수 있습니다.');return;}
+  if(battleOver && playerHp<=0 && enemyHp>0){continueBattleWithCharacter(id);return;}
+  state.selectedId=id; playerCard=c;
+  if(c.id==='hwarangJunggu') playerSealTurns=0;
+  if(bossMode){
+    if(jonggunBossMode){ loadJonggunPage(jonggunPage||1); }
+    else if(freeJujitaeBossMode && freeJujitaePage>=1){ loadFreeJujitaePage(freeJujitaePage||1); }
+    else if(godBossMode){
+      const base=cards.find(x=>x.id==='godJunseong'); enemyCard={...base,name:'전왕 김준성 · 보스',rarity:'GOD BOSS'}; initBattleStats(true); playerSealTurns=3;
+    }else{
+      const base=cards.find(x=>x.id==='jujitae'); enemyCard={...base,name:'주지태 · 보스',hp:10000,atk:3000,def:5000,rarity:'X',trait:'두려움 — 자신의 HP가 1이라도 깎일 시 스킬 데미지 2배',skills:[['레프트 훅',4000,0],['플라잉 암바',6000,2],['인사이드 힐훅',8000,4]]}; initBattleStats(true);
+    }
+  }else{
+    junGuBossMode=false;
+    const options=opponentPoolFor(playerCard); enemyCard=options[Math.floor(Math.random()*options.length)]||cards.find(x=>x.id!=='immortalSanguk'&&x.id!=='transcendSanguk'&&x.id!==playerCard.id&&x.rarity!=='SECRET'); initBattleStats(false);
+  }
+  document.getElementById('battleLog').innerHTML=''; appendLog(`⚔️ ${c.name} 선택! ${bossMode?(customBossMode?(customBossId==='chuuniSeungwoo'?'중2병 걸린 이승우 보스전':(customBossId==='jihongBoss'?'왕대가리 김지홍 보스전':'초생명체 최예강 보스전')):(jonggunBossMode?'종건 잡기':(freeJujitaeBossMode?'자유의 주지태 · GOD 보스전':(godBossMode?'전왕 김준성 보스전':'주지태 보스전')))):'새 배틀'}을 시작합니다.`); save(); renderBattle();
+}
+
+function continueBattleWithCharacter(id){
+  const c=cards.find(x=>x.id===id);
+  if(!c||!ownedCount(id)||getPersistentHp(c)<=0||enemyHp<=0)return;
+  const preservedEnemyHp=enemyHp, preservedTurn=turn, preservedSeal=playerSealTurns;
+  playerCard=c; state.selectedId=id; resetEntryTraits(c);
+  playerBattleAtk=getBattleAtk(c); playerBattleDef=getBattleDef(c); playerBattleMaxHp=getBattleHp(c); playerHp=Math.min(getPersistentHp(c),playerBattleMaxHp);
+  enemyHp=preservedEnemyHp; turn=preservedTurn; playerSealTurns=(c.id==='hwarangJunggu'?0:preservedSeal); battleOver=false;
+  if(c.id==='shinSeungwoo') applyShinGamble();
+  if(c.id==='immortalSeungwoo' && getBattleAtk(enemyCard)>getBattleAtk(c)) playerHp=Math.min(playerBattleMaxHp,playerHp+2000);
+  if(c.id==='immortalSanguk') playerImmortalSangukSealTurns=10;
+  playerHwarangResurrectUsed=false;
+  save(); appendLog(`🔄 ${c.name} 등장! 상대 HP ${Math.max(0,Math.floor(enemyHp)).toLocaleString()} 상태에서 전투를 계속합니다.`); playSfx('rare'); renderBattle();
+}
+
+function endNoSkillTurn(){
+  if(battleOver || !playerCard || !isSpecialNoSkill(playerCard)) return;
+  playerActionsThisTurn=1; enemyTurn();
+}
+function reviveWithJuwan(id){
+  if(!battleOver||playerHp>0||enemyHp<=0||playerCard?.id!=='transcendJuwan')return;
+  const c=cards.find(x=>x.id===id); if(!c||!ownedCount(id)||getPersistentHp(c)>0)return;
+  state.currentHp[id]=getBattleHp(c); playerCard=c; state.selectedId=id;
+  resetEntryTraits(c); playerBattleAtk=getBattleAtk(c); playerBattleDef=getBattleDef(c); playerBattleMaxHp=getBattleHp(c); playerHp=playerBattleMaxHp;
+  battleOver=false; appendLog(`♻️ 초월자 김주완이 ${c.name}을(를) 부활시켰습니다. 김주완은 사망했습니다.`); save(); renderBattle();
+}
+function applyShinGamble(){
+  const success=Math.random()<.5, mult=success?2:.5;
+  playerBattleAtk=Math.max(1,Math.floor(playerBattleAtk*mult)); playerBattleDef=Math.max(1,Math.floor(playerBattleDef*mult)); playerBattleMaxHp=Math.max(1,Math.floor(playerBattleMaxHp*mult)); playerHp=Math.min(playerHp,playerBattleMaxHp);
+  appendLog(`${success?'🎲 도박 성공!':'🎲 도박 실패!'} 전투 능력치가 ${success?'2배':'절반'}로 적용됩니다.`);
+}
+function maybeTriggerPassiveOnEntry(c){
+  if(c.id==='shinSeungwoo') applyShinGamble();
+  if(c.id==='immortalSeungwoo' && getBattleAtk(enemyCard)>getBattleAtk(c)) playerHp=Math.min(playerBattleMaxHp,playerHp+2000);
+}
+function setupBattle(){
+  // 새 상대를 누르면 모든 보스전 플래그를 완전히 초기화한다.
+  // 특히 자유의 주지태 전용 모드가 남아 있으면 일반 적 처치가 자유의 주지태 보상으로 처리될 수 있다.
+  bossMode=false; godBossMode=false; jonggunBossMode=false; freeJujitaeBossMode=false; junGuBossMode=false; customBossMode=false; customBossId=null; customChoiReflectLeft=0; customChoiShieldTurns=0; jonggunPage=0; freeJujitaePage=0; freeJujitaePage2ReviveUsed=false; freeJujitaePage4ReviveUsed=false; freeJujitaeDodgeLeft=0; freeJujitaeFearActive=false; freeJujitaeReverseLightUsed=false;
+  const owned=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong')&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
+  if(!owned.length){alert('사용 가능한 캐릭터가 없습니다. HP를 회복하거나 다른 캐릭터를 획득하세요.');go('collection');return;}
+  if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
+  const options=opponentPoolFor(playerCard); enemyCard=options[Math.floor(Math.random()*options.length)]||cards.find(c=>c.id!==playerCard.id&&c.rarity!=='SECRET'&&!c.noOpponent);
+  initBattleStats(false); document.getElementById('battleLog').innerHTML=''; renderBattle(true);
+}
+
+function startBossBattle(){
+  bossMode=true; godBossMode=false; jonggunBossMode=false; freeJujitaeBossMode=false; junGuBossMode=false; customBossMode=false; customBossId=null; customChoiReflectLeft=0; customChoiShieldTurns=0; jonggunPage=0;
+  const owned=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong')&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
+  if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
+  if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
+  const base=cards.find(c=>c.id==='jujitae'); enemyCard={...base,name:'주지태 · 보스',hp:10000,atk:3000,def:5000,rarity:'X',trait:'두려움 — 자신의 HP가 1이라도 깎일 시 스킬 데미지 2배',skills:[['레프트 훅',4000,0],['플라잉 암바',6000,2],['인사이드 힐훅',8000,4]]};
+  initBattleStats(true); document.getElementById('battleLog').innerHTML=''; go('battle'); renderBattle(true); appendLog('👹 주지태 보스전 시작! HP 10,000 · 승리 시 +1,000 코인 · 10,000 EXP');
+}
+
+
+function setupFreeJujitaePage(page){
+  const defs={
+    1:{id:'freeJujitaeP1',name:'자유의 주지태 · PAGE 1',rarity:'GOD',img:'assets/free_jujitae_p1.png',hp:10000,atk:3000,def:5000,trait:'두려움 — 자신의 HP가 1이라도 깎일 시 스킬 데미지 2배',skills:[['레프트 훅',4000,0],['플라잉 암바',6000,2],['인사이드 힐훅',8000,4]]},
+    2:{id:'freeJujitaeP2',name:'자유의 주지태 · PAGE 2',rarity:'GOD',img:'assets/free_jujitae_p2.png',hp:70000,atk:30000,def:30000,trait:'부활 — 1회 부활',skills:[['엘보우',13000,0],['바디 펀치',20000,2],['니킥',30000,4]]},
+    3:{id:'freeJujitaeP3',name:'자유의 주지태 · PAGE 3',rarity:'GOD',img:'assets/free_jujitae_p3.png',hp:100000,atk:50000,def:50000,trait:'회피 — 상대 공격을 3회 회피함',skills:[['힐훅',20000,0],['펀치',25000,2],['하드 펀치',50000,4]]},
+    4:{id:'freeJujitaeP4',name:'자유의 주지태 · PAGE 4',rarity:'GOD',img:'assets/free_jujitae_p4.png',hp:150000,atk:70000,def:70000,trait:'부활 — 1회 부활',trait2:'회피 — 상대 공격을 3회 회피함',skills:[['힐훅',25000,0],['꺾기',48000,2],['두려움',0,4]]},
+    5:{id:'freeJujitaeP5',name:'자유의 주지태 · PAGE 5 · GOD',rarity:'GOD',img:'assets/free_jujitae_god.png',hp:200000,atk:100000,def:80000,trait:'자유 — 상대 공격을 3회 회피함',trait2:'두려움 — 자신의 HP가 1이라도 깎일 시 스킬 데미지 2배',trait3:'역광 — 두려움 효과가 발동될시 자신의 HP + 100000',skills:[['막싸움',40000,0],['플라잉 암바',50000,50],['힐훅',700000,100]]}
+  };
+  return defs[page];
+}
+function loadFreeJujitaePage(page){
+  freeJujitaePage=page;
+  const d=setupFreeJujitaePage(page);
+  enemyCard={...d};
+  enemyHp=enemyCard.hp;
+  freeJujitaeDodgeLeft=(page===3||page===4||page===5)?3:0;
+  freeJujitaeFearActive=false;
+  freeJujitaeReverseLightUsed=false;
+  battleOver=false;
+  playerActionsThisTurn=0;
+  renderBattle();
+}
+function startFreeJujitaeBossBattle(){
+  // 자유의 주지태는 일반 주지태/일반 배틀과 완전히 분리된 전용 모드로 시작한다.
+  // 다른 전투에서 남은 최예강 보스 특성/모드와 이전 전투 HP를 이어받지 않는다.
+  bossMode=true; godBossMode=false; jonggunBossMode=false; freeJujitaeBossMode=true; junGuBossMode=false; customBossMode=false; customBossId=null; customChoiReflectLeft=0; customChoiShieldTurns=0; jonggunPage=0;
+  freeJujitaePage=1; freeJujitaePage2ReviveUsed=false; freeJujitaePage4ReviveUsed=false;
+  freeJujitaeDodgeLeft=0; freeJujitaeFearActive=false; freeJujitaeReverseLightUsed=false;
+  const owned=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong')&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
+  if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
+  if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
+  // 핵심 수정: 이전 일반 적 데이터와 이전 전투 HP를 절대 재사용하지 않고 PAGE 1 적을 강제로 로드한다.
+  resetEntryTraits(playerCard);
+  playerBattleAtk=getBattleAtk(playerCard); playerBattleDef=getBattleDef(playerCard); playerBattleMaxHp=getBattleHp(playerCard); playerHp=Math.min(getPersistentHp(playerCard),playerBattleMaxHp);
+  loadFreeJujitaePage(1);
+  document.getElementById('battleLog').innerHTML='';
+  go('battle'); renderBattleSelector(true); renderBattle(true); appendLog('🩸 자유의 주지태 · GOD 보스전 시작! PAGE 1 → PAGE 5 · 클리어 보상 +40,000 코인 · +300,000 EXP');
+  save();
+}
+function finishFreeJujitaePage(){
+  // 안전장치: 실제 자유의 주지태 페이지 적을 처치한 경우에만 전용 보상을 처리한다.
+  const isValidFreeJujitaeBattle=!!(freeJujitaeBossMode&&bossMode&&enemyCard&&String(enemyCard.id||'').startsWith('freeJujitaeP'));
+  if(!isValidFreeJujitaeBattle){ return; }
+  const defeatedPage=freeJujitaePage;
+  battleOver=true;
+  if(defeatedPage===2 && !freeJujitaePage2ReviveUsed){
+    freeJujitaePage2ReviveUsed=true;
+    appendLog('♻️ 자유의 주지태 PAGE 2 부활 발동!');
+    loadFreeJujitaePage(2);
+    return;
+  }
+  if(defeatedPage===4 && !freeJujitaePage4ReviveUsed){
+    freeJujitaePage4ReviveUsed=true;
+    appendLog('♻️ 자유의 주지태 PAGE 4 부활 발동!');
+    loadFreeJujitaePage(4);
+    return;
+  }
+  if(defeatedPage<5){
+    appendLog(`🔥 PAGE ${defeatedPage} 클리어! ${defeatedPage+1}페이지로 진입합니다.`);
+    loadFreeJujitaePage(defeatedPage+1);
+    return;
+  }
+  state.stats.freeJujitaeBossWins++;
+  state.coins+=40000;
+  state.currentHp[playerCard.id]=Math.max(0,playerHp);
+  const xpMult=(state.xpBoostKills||0)>0?2:1;
+  const xpGain=300000*xpMult;
+  grantBattleXp(playerCard,xpGain);
+  if((state.xpBoostKills||0)>0)state.xpBoostKills=Math.max(0,state.xpBoostKills-1);
+  checkSpecialQuests();
+  save();
+  appendLog(`🏆 자유의 주지태 5페이지 완전 클리어! +40,000 코인 · +${xpGain.toLocaleString()} EXP`);
+  renderBattle();renderCollection();renderAwakening();renderRewards();playSfx('win');
+}
+
+function setupJonggunPage(page){
+  const defs={
+    1:{id:'jonggun',name:'박종건 · PAGE 1',rarity:'SSS+',img:'assets/jonggun_park.png',hp:20000,atk:20000,def:10000,trait:'경지 (힘, 맷집) — 공격 ×2 · HP ×2',skills:[['정권지르기',6000,0],['정권지르기 5연',9000,2]]},
+    2:{id:'shirooni',name:'白鬼 시로오니 · PAGE 2',rarity:'X',img:'assets/jonggun_shirooni.png',hp:30000,atk:30000,def:30000,trait:'흑골 — 상대 공격을 3회 무시함.',trait2:'자신만의길 (신체) — 사망했을시 부활하고 모든 능력치 + 5000',skills:[['정권지르기 10연',8000,0],['바디훅',12000,2],['키신세이켄 17연',17000,4]]},
+    3:{id:'yamasakiJonggun',name:'백귀 야마자키 종건 · PAGE 3',rarity:'GOD',img:'assets/jonggun_yamasaki.png',hp:100000,atk:100000,def:100000,trait:'무의식 — HP, ATK, DEF 수치를 모두 100000까지 올린다.',trait2:'죽일각오 — 자신이 사망하면 상대 캐릭터도 사망한다.',trait3:'자신만의길 (신체) — 사망했을시 부활하고 모든 능력치 + 5000',trait4:'흑골 — 상대 공격 3회 무시 · 경지 — 상대 공격 3회 회피',skills:[['키신세이켄 81연',30000,0],['정권지르기',45000,2],['아이키도',0,4]]}
+  };
+  return defs[page];
+}
+function loadJonggunPage(page, revived=false){
+  jonggunPage=page;
+  const d=setupJonggunPage(page);
+  enemyCard={...d};
+  if(revived){ enemyCard.hp+=5000; enemyCard.atk+=5000; enemyCard.def+=5000; if(page===3){enemyCard.hp=Math.min(100000,enemyCard.hp);enemyCard.atk=Math.min(100000,enemyCard.atk);enemyCard.def=Math.min(100000,enemyCard.def);} }
+  enemyHp=enemyCard.hp;
+  jonggunBlackBoneLeft=(page>=2)?3:0;
+  jonggunDodgeLeft=(page===3)?3:0;
+  jonggunLastPlayerDamage=0;
+  battleOver=false;
+  playerActionsThisTurn=0;
+  renderBattle();
+}
+function startJonggunBossBattle(){
+  bossMode=true; godBossMode=false; jonggunBossMode=true; freeJujitaeBossMode=false; junGuBossMode=false; customBossMode=false; customBossId=null; customChoiReflectLeft=0; customChoiShieldTurns=0; jonggunPage=1; jonggunWhiteReviveUsed=false; jonggunYamazakiReviveUsed=false;
+  const owned=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong')&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
+  if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
+  if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
+  resetEntryTraits(playerCard); playerBattleAtk=getBattleAtk(playerCard); playerBattleDef=getBattleDef(playerCard); playerBattleMaxHp=getBattleHp(playerCard); playerHp=Math.min(getPersistentHp(playerCard),playerBattleMaxHp);
+  loadJonggunPage(1);
+  document.getElementById('battleLog').innerHTML=''; go('battle'); renderBattleSelector(); renderBattle(); appendLog('👹 종건 잡기 시작! PAGE 1 · 박종건');
+}
+function finishJonggunPage(){
+  const defeatedPage=jonggunPage;
+  battleOver=true;
+  if(defeatedPage===2 && !jonggunWhiteReviveUsed){
+    jonggunWhiteReviveUsed=true;
+    appendLog('♻️ 白鬼 시로오니의 자신만의길! 부활하며 모든 능력치 +5,000.');
+    loadJonggunPage(2,true);
+    return;
+  }
+  if(defeatedPage===3 && !jonggunYamasakiReviveUsed){
+    jonggunYamasakiReviveUsed=true;
+    appendLog('♻️ 백귀 야마자키 종건의 자신만의길! 부활을 발동합니다.');
+    loadJonggunPage(3,true);
+    return;
+  }
+  if(defeatedPage<3){
+    appendLog(`🔥 PAGE ${defeatedPage} 클리어! ${defeatedPage+1}페이지로 진입합니다.`);
+    loadJonggunPage(defeatedPage+1);
+    return;
+  }
+  if(enemyCard.id==='yamasakiJonggun'){
+    // 죽일각오: 마지막 페이지가 쓰러질 때 현재 캐릭터도 함께 쓰러짐.
+    playerHp=0; state.currentHp[playerCard.id]=0;
+  }
+  state.stats.jonggunStageWins++;
+  let firstReward=false;
+  if(!state.specialQuestClaimed.jonggunBossReward && ownedCount('jonggun')===0){
+    state.specialQuestClaimed.jonggunBossReward=true;
+    grantCharacter('jonggun');
+    firstReward=true;
+  }
+  checkSpecialQuests();
+  save();
+  appendLog(`🏆 종건 잡기 3페이지 완전 클리어! 누적 ${state.stats.jonggunStageWins}회`);
+  renderBattle(); renderCollection(); renderAwakening(); renderRewards(); playSfx('win');
+  if(firstReward){setTimeout(()=>showReveal(cards.find(c=>c.id==='jonggun'),false),220);}
+}
+
+function startCustomBossBattle(id){
+  const defs={
+    chuuniSeungwoo:{name:'중2병 걸린 이승우 · 보스',rarity:'GOD BOSS',img:'assets/chuuni_seungwoo.png',hp:60000,atk:20000,def:24000,trait:'이기적인 새끼 — 사망 시 전투 종료',trait2:'흑염룡 — 상대 HP가 자신보다 높으면 체력 +30,000',skills:[['비겁하게 기습 공격하기',10000,0],['엿 날리기',0,1],['쉐도우 다크 레전더리 드래곤 브레스',90000,4]]},
+    jihongBoss:{name:'왕대가리 김지홍 · 보스',rarity:'SSS BOSS',img:'assets/jihong_boss.png',hp:8000,atk:5000,def:6000,trait:'강약약강 — 자신보다 HP가 낮은 상대라면 스킬 피해 +3,000',skills:[['돌 던지기',500,0],['쇠파이프 던지기',2000,1],['화염병 던지기',50000,4]]},
+    meatMonsterChoi:{name:'초생명체 최예강 · 보스',rarity:'GOD BOSS',img:'assets/meat_monster_choi.png',hp:150000,atk:30000,def:80000,trait:'고기방패 반사 — 상대의 공격을 3회 반사',trait2:'고기방패 — 2회 턴 동안 공격 데미지를 받지 않음',skills:[['최예강의 반격',5000,0],['똥꼬 보여주기',5500,1],['L을 가져가',6000,4]]}
+  };
+  const d=defs[id]; if(!d)return;
+  bossMode=true; godBossMode=false; jonggunBossMode=false; freeJujitaeBossMode=false; junGuBossMode=false; customBossMode=true; customBossId=id;
+  const owned=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong')&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
+  if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
+  if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
+  enemyCard={id:id,name:d.name,rarity:d.rarity,img:d.img,hp:d.hp,atk:d.atk,def:d.def,trait:d.trait,trait2:d.trait2,skills:d.skills,customBoss:true};
+  if(id==='chuuniSeungwoo'&&getPersistentHp(playerCard)>enemyCard.hp){enemyCard.hp+=30000;}
+  initBattleStats(true);
+  if(id==='meatMonsterChoi'){customChoiReflectLeft=3;customChoiShieldTurns=2;}
+  else {customChoiReflectLeft=0;customChoiShieldTurns=0;}
+  document.getElementById('battleLog').innerHTML=''; go('battle'); renderBattleSelector(); renderBattle(); appendLog(`👹 ${d.name} 시작!`); save();
+}
+
+function startGodBossBattle(){
+  bossMode=true; godBossMode=true; jonggunBossMode=false; freeJujitaeBossMode=false; junGuBossMode=false; customBossMode=false; customBossId=null; customChoiReflectLeft=0; customChoiShieldTurns=0; jonggunPage=0;
+  const owned=cards.filter(c=>(c.rarity!=='SECRET'||c.id==='asuraOverlordJunseong')&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
+  if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
+  if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
+  const base=cards.find(c=>c.id==='godJunseong'); enemyCard={...base,name:'전왕 김준성 · 보스',rarity:'GOD BOSS'};
+  initBattleStats(true); playerSealTurns=3; godResurrectUsed=false; document.getElementById('battleLog').innerHTML=''; go('battle'); renderBattleSelector(); renderBattle(); appendLog('👑 전왕 김준성 보스전 시작! 상대 공격 3회 봉인 · 권능 발동');
+}
+
+function initBattleStats(isBoss=false){
+  resetEntryTraits(playerCard);
+  applySangukAlwaysAwaken(playerCard);
+  playerBattleAtk=getBattleAtk(playerCard); playerBattleDef=getBattleDef(playerCard); playerBattleMaxHp=getBattleHp(playerCard); playerHp=Math.min(getPersistentHp(playerCard),playerBattleMaxHp);
+  enemyHp=isBoss?enemyCard.hp:getBattleHp(enemyCard); turn=1; battleOver=false;
+  if(playerCard.id==='shinSeungwoo') applyShinGamble();
+  if(playerCard.id==='chuuniSeungwoo'&&enemyCard&&getBattleHp(enemyCard)>playerBattleMaxHp){playerBattleMaxHp+=30000;playerHp=Math.min(playerBattleMaxHp,playerHp+30000);appendLog('🐉 흑염룡 발동! 최대 HP +30,000.');}
+  if(playerCard.id==='immortalSeungwoo' && getBattleAtk(enemyCard)>getBattleAtk(playerCard)) playerHp=Math.min(playerBattleMaxHp,playerHp+2000);
+  if(playerCard.id==='immortalSanguk') playerImmortalSangukSealTurns=10;
+  playerHwarangResurrectUsed=false;
+}
+
+function getPlayerMaxForBattle(){return playerBattleMaxHp}
+function getPlayerAtkForBattle(){return playerBattleAtk}
+function getPlayerDefForBattle(){return playerBattleDef}
+function updateFighterDynamicUI(el,c,hp,enemy){
+  if(!el)return;
+  const max=enemy?((godBossMode||junGuBossMode)?enemyCard.hp:getBattleHp(c)):getPlayerMaxForBattle();
+  const safeMax=Math.max(1,max), pct=Math.max(0,Math.min(100,hp/safeMax*100));
+  const hpText=el.querySelector('.hp-top b'); if(hpText)hpText.textContent=`${Math.max(0,Math.floor(hp)).toLocaleString()} / ${Math.floor(max).toLocaleString()}`;
+  const fill=el.querySelector('.hpfill'); if(fill)fill.style.width=`${pct}%`;
+}
+function updateBattleControls(){
+  const turnEl=document.getElementById('turnInfo');
+  if(turnEl){const actionLimit=getActionLimit(playerCard);turnEl.textContent=battleOver?'전투 종료':(godBossMode&&playerSealTurns>0?`봉인 ${playerSealTurns}회`:(actionLimit>1?`내 턴 · ${playerActionsThisTurn}/${actionLimit}`:(bossMode?(jonggunBossMode?`종건 잡기 · PAGE ${jonggunPage}`:(godBossMode?'전왕 보스전 · 내 턴':'보스전 · 내 턴')):'내 턴')));}
+  const hint=document.getElementById('battleHint');
+  if(hint){const nextAvailable=cards.some(x=>x.rarity!=='SECRET'&&ownedCount(x.id)>0&&x.id!==playerCard.id&&getPersistentHp(x)>0);hint.textContent=(battleOver&&playerHp<=0&&enemyHp>0&&nextAvailable)?'캐릭터가 쓰러졌습니다. 아래에서 다음 캐릭터를 골라 전투를 이어가세요.':(battleOver?'전투가 끝났습니다. 새 상대를 눌러 다시 시작할 수 있습니다.':(bossMode?'보스전에서도 캐릭터가 쓰러지면 다른 캐릭터로 이어갈 수 있습니다.':'캐릭터가 쓰러지면 다른 캐릭터로 이어서 싸울 수 있습니다.'));}
+  const playerEl=document.getElementById('playerFighter');
+  if(playerEl){playerEl.querySelectorAll('.skill-btn').forEach((btn,i)=>{const unlocked=isSkillUnlocked(playerCard,i,getCardLevel(playerCard)); const sealed=godBossMode&&playerSealTurns>0; btn.disabled=battleOver||!unlocked||sealed; btn.classList.toggle('locked-skill',battleOver||!unlocked||sealed);});}
+}
+function renderBattle(full=true){
+  if(!playerCard||!enemyCard)return;
+  renderBattleSelector(false);
+  const pf=document.getElementById('playerFighter'), ef=document.getElementById('enemyFighter');
+  if(full||!pf?.dataset.characterId||pf.dataset.characterId!==playerCard.id){pf.innerHTML=fighterHTML(playerCard,playerHp,false);pf.dataset.characterId=playerCard.id;}
+  if(full||!ef?.dataset.characterId||ef.dataset.characterId!==enemyCard.id){ef.innerHTML=fighterHTML(enemyCard,enemyHp,true);ef.dataset.characterId=enemyCard.id;}
+  updateFighterDynamicUI(pf,playerCard,playerHp,false);
+  updateFighterDynamicUI(ef,enemyCard,enemyHp,true);
+  updateBattleControls();
+  renderBattleSelector(false);
+}
+
+function fighterHTML(c,hp,enemy){
+  const max=enemy?((godBossMode||junGuBossMode)?enemyCard.hp:getBattleHp(c)):getPlayerMaxForBattle();
+  const safeMax=Math.max(1,max), pct=Math.max(0,Math.min(100,hp/safeMax*100)),lvl=getCardLevel(c);
+  let skillsHtml='';
+  if(!enemy){
+    if(isSpecialNoSkill(c)){
+      skillsHtml=`<div class="trait" style="margin-top:12px"><b>행동</b><br>${c.id==='immortalSanguk'?'스킬 없음 · 상대 턴 10회 봉인 및 공격 반사':c.id==='transcendJuwan'?'스킬 없음 · 사망 시 원하는 캐릭터 부활':'스킬 없음'}</div>`;
+      if(!battleOver) skillsHtml+=`<div class="select-row"><button class="btn primary" onclick="endNoSkillTurn()">⏭️ 턴 넘기기</button></div>`;
+    }else{
+      const count=c.skills.length;
+      const sealed=godBossMode&&playerSealTurns>0;
+      skillsHtml=`<div class="skills-battle">${c.skills.slice(0,count).map((s,i)=>{
+        const unlocked=isSkillUnlocked(c,i,lvl) && !(c.id==='hwarangJunggu'&&i===3&&!getEquippedWeaponInstances(c.id).some(w=>w.id==='hwarangSword'));
+        const skillLabel=c.id==='hwarangJunggu'&&i===3&&!getEquippedWeaponInstances(c.id).some(w=>w.id==='hwarangSword')?'화랑검 장착 필요':c.id==='shinSeungwoo'&&i===2?'재도박':c.id==='godJunseong'&&i===0?'상대 1번 스킬 ×2':c.id==='slyJuwan'&&i===0?'HP+ATK+DEF':c.id==='immortalSeungwoo'&&i===2?'ATK +3000':`${getSkillDamage(c,i)} 피해`;
+        return `<button class="skill-btn ${unlocked&&!sealed?'':'locked-skill'}" ${battleOver||!unlocked||sealed?'disabled':''} onclick="useSkill(${i})">${unlocked?['⚡','🔥','💀','🩸'][i]:'🔒'} ${s[0]}<br><span style="color:#8f9bbb;font-weight:700">${unlocked?skillLabel:`Lv.${skillUnlockLevel(i)} 해금`}</span></button>`;
+      }).join('')}</div>`;
+      if(getActionLimit(c)>1&&!battleOver&&playerActionsThisTurn>0&&playerActionsThisTurn<getActionLimit(c)){skillsHtml+=`<div class="select-row"><button class="btn" onclick="endGodTurn()">턴 종료</button></div>`;}
+      if(godBossMode&&playerSealTurns>0&&!battleOver){skillsHtml+=`<div class="select-row"><button class="btn" onclick="endSealedTurn()">⛓️ 봉인 견디기 · ${playerSealTurns}회 남음</button></div>`;}
+    }
+  }
+  if(!enemy&&battleOver&&hp<=0&&enemyHp>0){
+    if(c.id==='transcendJuwan'){
+      const dead=cards.filter(x=>x.id!=='transcendJuwan'&&(x.rarity!=='SECRET'||x.id==='asuraOverlordJunseong')&&ownedCount(x.id)>0&&getPersistentHp(x)<=0);
+      if(dead.length){skillsHtml+=`<div class="switch-box"><b>♻️ 영웅은 죽지 않아요</b><p>부활시킬 캐릭터를 선택하세요. 초월자 김주완은 사망합니다.</p><div class="switch-actions">${dead.map(x=>`<button class="switch-btn" type="button" onclick="reviveWithJuwan('${x.id}')"><img decoding="async" src="${x.img}" alt="${x.name}"><span class="sb-name">${x.name}</span><span class="sb-hp">부활 · HP ${getBattleHp(x).toLocaleString()}</span></button>`).join('')}</div></div>`;}
+      else skillsHtml+=`<div class="switch-box"><b>💀 부활시킬 캐릭터가 없습니다.</b><p>이번 배틀은 종료됩니다.</p></div>`;
+    }else{
+      const next=cards.filter(x=>(x.rarity!=='SECRET'||x.id==='asuraOverlordJunseong')&&ownedCount(x.id)>0&&x.id!==c.id&&getPersistentHp(x)>0);
+      if(next.length) skillsHtml+=`<div class="switch-box"><b>💀 ${c.name} 쓰러짐</b><p>상대 HP는 그대로 유지됩니다. 다른 캐릭터를 골라 전투를 이어가세요.</p><div class="switch-actions">${next.map(x=>`<button class="switch-btn" type="button" onclick="continueBattleWithCharacter('${x.id}')"><img decoding="async" src="${x.img}" alt="${x.name}"><span class="sb-name">${x.name}</span><span class="sb-hp">HP ${getPersistentHp(x).toLocaleString()} / ${getBattleHp(x).toLocaleString()}</span></button>`).join('')}</div></div>`;
+      else skillsHtml+=`<div class="switch-box"><b>💀 모든 캐릭터가 쓰러졌습니다.</b><p>이번 배틀에서 더 이상 이어서 싸울 캐릭터가 없습니다.</p></div>`;
+    }
+  }
+  const traitHtml=`<div class="trait" style="margin-top:10px"><b>특성</b> · ${c.trait}${c.trait2?`<br><b>특성2</b> · ${c.trait2}`:''}${c.trait3?`<br><b>특성3</b> · ${c.trait3}`:''}${c.trait4?`<br><b>특성4</b> · ${c.trait4}`:''}</div>`;
+  return `<div class="fighter-head"><div><div class="fighter-name">${c.name}</div><div class="battle-level">Lv.${lvl} / ${getMaxLevel(c)}</div></div><div class="rarity r-${rarityClass(c.rarity)}">${c.rarity}</div></div>
+  <div class="hp-wrap"><div class="hp-top"><span>HP</span><b>${Math.max(0,Math.floor(hp)).toLocaleString()} / ${Math.floor(max).toLocaleString()}</b></div><div class="hpbar"><div class="hpfill" style="width:${pct}%"></div></div></div>
+  <div class="portrait"><img decoding="async" src="${c.img}" alt="${c.name}"></div>${traitHtml}${godBossMode&&enemy?'<div class="trait" style="margin-top:8px"><b>권능</b> · 부활 · 봉인 · 권능</div>':''}${!enemy&&c.id==='transcendChoi'&&playerTranscendChoiInvulTurns>0?`<div class="trait"><b>무적</b> · ${playerTranscendChoiInvulTurns}회 남음</div>`:''}${!enemy&&c.id==='immortalChoi'&&playerImmortalChoiReflectLeft>0?`<div class="trait"><b>반사</b> · ${playerImmortalChoiReflectLeft}회 남음</div>`:''}${!enemy&&c.id==='immortalSanguk'&&playerImmortalSangukSealTurns>0?`<div class="trait"><b>속박</b> · 상대 턴 ${playerImmortalSangukSealTurns}회 봉인</div>`:''}${skillsHtml}`;
+}
+
+function useSkill(i){
+  if(battleOver)return;
+  if(godBossMode&&playerSealTurns>0)return;
+  if(!isSkillUnlocked(playerCard,i)){alert(`이 스킬은 Lv.${skillUnlockLevel(i)}에서 해금됩니다.`);return;}
+  const actionLimit=getActionLimit(playerCard);
+  if(actionLimit>1&&playerActionsThisTurn>=actionLimit)return;
+  const s=playerCard.skills[i]; let dmg=0; let specialAction=false;
+  if(playerCard.id==='asuraOverlordJunseong'&&i===1){
+    dmg=getSkillDamage(enemyCard,0)*3 + Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08);
+    appendLog(`📋 카피! 상대 스킬 데미지를 3배로 복제했습니다.`);
+  }else if(playerCard.id==='shinSeungwoo'&&i===2){
+    if(playerChanceUsed){alert('찬스는 전투당 한 번만 사용할 수 있습니다.');return;}
+    playerChanceUsed=true; const success=Math.random()<.5;
+    if(success){playerBattleAtk=Math.max(1,playerBattleAtk*2);playerBattleDef=Math.max(1,playerBattleDef*2);dmg=5000+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08);appendLog('🎲 찬스 성공! 능력치 2배 + 스킬 도박 2배!');}
+    else{playerBattleAtk=Math.max(1,Math.floor(playerBattleAtk*.5));playerBattleDef=Math.max(1,Math.floor(playerBattleDef*.5));dmg=2500+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08);appendLog('🎲 찬스 실패! 능력치가 절반으로 내려갔습니다.');}
+  }else if(playerCard.id==='godJunseong'&&i===0){const copied=getSkillDamage(enemyCard,0);dmg=copied*2+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08);}
+  else if(playerCard.id==='slyJuwan'&&i===0){dmg=getBattleHp(playerCard)+getBattleAtk(playerCard)+getBattleDef(playerCard);}
+  else if(playerCard.id==='immortalSeungwoo'&&i===2){playerBattleAtk+=3000;specialAction=true;appendLog('💪 운동하기! 자신의 공격력이 3,000 증가했습니다.');}
+  else if(jonggunBossMode || freeJujitaeBossMode){
+    if(playerCard.jungu){
+      // 페이지형 보스전에서도 김준구 계열은 장착 무기의 모든 스킬 추가 데미지를 적용한다.
+      dmg=getSkillDamage(playerCard,i)+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08);
+      if(!hasWeaponEquipped(playerCard)) dmg=0;
+    }else{
+      dmg=s[1]||0;
+    }
+  }
+  else {dmg=getSkillDamage(playerCard,i)+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08); if(playerCard.jungu&&!hasWeaponEquipped(playerCard)) dmg=0;}
+
+  if(playerCard.id==='streetFighterSeungwoo'&&Math.random()<.05){playerBattleAtk=Math.floor(playerBattleAtk*1.1);appendLog('🥊 막싸움 발동! 공격력이 10% 증가했습니다.');}
+  if(playerCard.id==='brainrot'&&Math.random()<.20){dmg*=2;appendLog('🌀 혼돈의 논리! 피해 2배!');}
+  if(['meatShieldChoi','transcendChoi','immortalChoi'].includes(playerCard.id) || (playerCard.jungu&&!hasWeaponEquipped(playerCard))) dmg=Math.max(0,Math.floor(dmg)); else if(!specialAction)dmg=Math.max(30,Math.floor(dmg));
+  if(customBossMode && customBossId==='jihongBoss' && playerBattleMaxHp>0 && playerBattleMaxHp<enemyCard.hp){ dmg+=3000; }
+  if(customBossMode && customBossId==='chuuniSeungwoo'){ dmg=Math.max(0,dmg-8000); }
+  if(customBossMode && customBossId==='meatMonsterChoi' && !specialAction){
+    if(customChoiReflectLeft>0){
+      const reflected=Math.max(0,Math.floor(dmg)); customChoiReflectLeft--; playerHp=Math.max(0,playerHp-reflected);
+      appendLog(`🔁 ${enemyCard.name} 고기방패 반사! ${reflected.toLocaleString()} 피해를 되돌렸습니다. (${customChoiReflectLeft}회 남음)`); dmg=0;
+    } else if(customChoiShieldTurns>0){ appendLog(`🛡️ ${enemyCard.name} 고기방패! 공격 데미지를 받지 않습니다. (${customChoiShieldTurns}턴 남음)`); dmg=0; }
+  }
+  if(jonggunBossMode && !specialAction){
+    if(jonggunBlackBoneLeft>0){jonggunBlackBoneLeft--;appendLog(`🦴 흑골 발동! ${enemyCard.name}이 공격을 무시했습니다. (${jonggunBlackBoneLeft}회 남음)`);dmg=0;}
+    else if(jonggunDodgeLeft>0){jonggunDodgeLeft--;appendLog(`💨 경지 발동! ${enemyCard.name}이 공격을 회피했습니다. (${jonggunDodgeLeft}회 남음)`);dmg=0;}
+  }
+  if(freeJujitaeBossMode && !specialAction && freeJujitaeDodgeLeft>0){
+    freeJujitaeDodgeLeft--; appendLog(`💨 ${enemyCard.name}의 자유! 공격을 회피했습니다. (${freeJujitaeDodgeLeft}회 남음)`); dmg=0;
+  }
+
+  if(!specialAction){
+    jonggunLastPlayerDamage=dmg;
+    const prevEnemyHp=enemyHp;
+    enemyHp=Math.max(0,enemyHp-dmg);
+    if(freeJujitaeBossMode&&freeJujitaePage===5&&enemyHp<prevEnemyHp&&!freeJujitaeFearActive){
+      freeJujitaeFearActive=true;
+      appendLog('😨 두려움 발동! 이후 스킬 데미지가 2배가 됩니다.');
+      if(!freeJujitaeReverseLightUsed){
+        freeJujitaeReverseLightUsed=true;
+        enemyHp=Math.min(enemyCard.hp,enemyHp+100000);
+        appendLog('🌅 역광 발동! 자유의 주지태 HP +100,000.');
+      }
+    }
+    appendLog(`내 스킬 <b>${s[0]}</b> → ${dmg.toLocaleString()} 피해`);
+    playSfx('hit');
+    // 공격 직후 현재 enemyHp를 즉시 화면에 반영한다.
+    // 특히 한 번에 처치하는 공격은 finishPlayerVictory() 전에 0 HP가 렌더링되도록 한다.
+    renderBattle(false);
+  }
+  if(actionLimit>1){
+    playerActionsThisTurn++;
+    renderBattle();
+    if(enemyHp<=0){finishPlayerVictory();return;}
+    if(playerActionsThisTurn<actionLimit){document.getElementById('turnInfo').textContent=`내 턴 · ${playerActionsThisTurn}/${actionLimit}`;return;}
+  }
+  else if(enemyHp<=0){finishPlayerVictory();return;}
+  enemyTurn();
+}
+
+function endGodTurn(){
+  if(battleOver||getActionLimit(playerCard)<=1||playerActionsThisTurn<1)return;
+  enemyTurn();
+}
+
+function endSealedTurn(){
+  if(battleOver||!godBossMode||playerSealTurns<=0)return;
+  playerSealTurns--; appendLog(`⛓️ 봉인 발동. 남은 봉인 횟수: ${playerSealTurns}`); enemyTurn();
+}
+
+function finishCustomBossVictory(){
+  battleOver=true;
+  const cfg={chuuniSeungwoo:{coins:10000,xp:30000,chance:.10},jihongBoss:{coins:500,xp:2000,chance:.50},meatMonsterChoi:{coins:2000,xp:4000,chance:.03}}[customBossId];
+  if(!cfg)return;
+  state.currentHp[playerCard.id]=Math.max(0,playerHp); state.coins+=cfg.coins; grantBattleXp(playerCard,cfg.xp);
+  let got=false;
+  const rewardId=customBossId==='chuuniSeungwoo'?'chuuniSeungwoo':customBossId==='jihongBoss'?'kingJihong':'meatMonsterChoi';
+  if(ownedCount(rewardId)===0&&Math.random()<cfg.chance){ grantCharacter(rewardId); got=true; appendLog(`🎉 ${cards.find(c=>c.id===rewardId)?.name||rewardId} 획득!`); }
+  if(customBossId==='chuuniSeungwoo') state.stats.chuuniBossWins++;
+  if(customBossId==='jihongBoss') state.stats.jihongBossWins++;
+  if(customBossId==='meatMonsterChoi') state.stats.meatMonsterChoiBossWins++;
+  checkAsuraOverlordQuest();
+  save(); appendLog(`🏆 보스 처치! +${cfg.coins.toLocaleString()} 코인 · +${cfg.xp.toLocaleString()} EXP`); renderBattle();renderCollection();renderAwakening();renderRewards();playSfx('win');
+  if(got)setTimeout(()=>showReveal(cards.find(c=>c.id===rewardId),false),220);
+}
+
+function finishPlayerVictory(){
+  if(customBossMode){ finishCustomBossVictory(); return; }
+  if(jonggunBossMode){ finishJonggunPage(); return; }
+  if(freeJujitaeBossMode && bossMode && enemyCard && String(enemyCard.id||'').startsWith('freeJujitaeP')){ finishFreeJujitaePage(); return; }
+  battleOver=true;
+  const isJunGuBoss=!!(enemyCard&&enemyCard.id==='junGuBoss'); const reward=isJunGuBoss?0:(bossMode?(godBossMode?3000:1000):100); state.coins+=reward;
+  if(godBossMode){state.stats.godBossWins++;} else if(bossMode){state.stats.bossWins++;state.stats.jujitaeBossWins++;} else state.stats.wins++;
+  state.currentHp[playerCard.id]=Math.max(0,playerHp);
+  const xpMult=(state.xpBoostKills||0)>0?2:1; const baseXpGain=bossMode?10000:xpRewardForRarity(enemyCard.rarity); const xpGain=baseXpGain*xpMult; grantBattleXp(playerCard,xpGain); if((state.xpBoostKills||0)>0)state.xpBoostKills=Math.max(0,state.xpBoostKills-1); grantWeaponLoot(enemyCard.id); if(isJunGuBoss){state.junGuBossWins++;if(Math.random()<0.10){addWeapon('hwarangSword');state.weaponHwarangObtained=true;appendLog('🗡️ 김준구 보스 격파 보상! 화랑검 획득!');}state.coins+=30000;grantBattleXp(playerCard,100000*xpMult);appendLog('👑 김준구 보스 보상: +30,000 코인 · +100,000 EXP');} checkJunGuQuests();
+  save(); appendLog(`🏆 승리! +${reward.toLocaleString()} 코인`); appendLog(`✨ ${playerCard.name} 경험치 +${xpGain.toLocaleString()} EXP`);
+  checkSpecialQuests();
+  if(godBossMode && checkGodQuest()){return;}
+  renderBattle();renderCollection();renderAwakening();renderRewards();playSfx('win');
+}
+
+function unlockGodReward(){
+ const c=cards.find(x=>x.id==='godJunseong');
+ if(!c)return false;
+ if(ownedCount(c.id)>0){state.godUnlocked=true;save();return true;}
+ state.godUnlocked=true;
+ state.specialQuestClaimed.godJunseong=true;
+ state.owned[c.id]=(state.owned[c.id]||0)+1;
+ state.fragments[c.id]=(state.fragments[c.id]||0)+1;
+ state.levels[c.id]=Math.max(1,state.levels[c.id]||1);
+ state.xp[c.id]=0;
+ state.currentHp[c.id]=getBattleHp(c);
+ save();
+ setTimeout(()=>{
+   closeModal('revealModal');
+   document.getElementById('revealContent').innerHTML=`<div class="reveal-rarity" style="color:#fff08a">GOD</div><div class="special-text" style="color:#fff08a">I'AM GOD</div><div class="reveal-name">${c.name}</div><div class="reveal-card UR"><img decoding="async" src="${c.img}" alt="${c.name}"></div><p style="color:var(--muted);margin-top:14px">특별 퀘스트 보상으로 전왕 김준성을 획득했습니다.</p>`;
+   document.getElementById('revealModal').classList.add('show');
+   burst(90); playSfx('rare');
+ },250);
+}
+function enemyTurn(){
+  if(battleOver)return;
+  document.getElementById('turnInfo').textContent='상대 턴';
+  setTimeout(()=>{
+    if(battleOver)return;
+    if(playerCard.id==='immortalSeungwoo'&&getBattleAtk(enemyCard)>playerBattleAtk) playerHp=Math.min(playerBattleMaxHp,playerHp+2000);
+    const sealedAll=playerCard.id==='immortalSanguk'&&playerImmortalSangukSealTurns>0; const junGuSeal=playerCard.jungu&&playerCard.id!=='hwarangJunggu'&&playerSealTurns>0; const asuraSeal=playerCard.id==='asuraOverlordJunseong'&&playerSealTurns>0;
+    const hitCount=(godBossMode?2:(junGuBossMode?3:1));
+    for(let h=0;h<hitCount&&!battleOver;h++){
+      let enemySkillIndex=Math.floor(Math.random()*Math.max(1,enemyCard.skills.length));
+      let s=enemyCard.skills[enemySkillIndex];
+      let baseDamage=0;
+      if(sealedAll){appendLog(`⛓️ 불멸의 박상욱의 속박 권능! 상대 턴을 봉인했습니다. (${Math.max(0,playerImmortalSangukSealTurns)}회 남음)`);break;} if(junGuSeal||asuraSeal){playerSealTurns=Math.max(0,playerSealTurns-1);appendLog(`⛓️ ${playerCard.name}의 속박! 상대의 공격 턴을 봉인했습니다. (${playerSealTurns}회 남음)`);break;}
+      const isAikido=jonggunBossMode&&enemyCard.id==='yamasakiJonggun'&&enemySkillIndex===2;
+      if(godBossMode&&enemyCard.id==='godJunseong'&&enemySkillIndex===0) baseDamage=getSkillDamage(playerCard,0)*2; else if(isAikido) baseDamage=Math.max(0,jonggunLastPlayerDamage*3); else if(junGuBossMode) baseDamage=enemyCard.skills[enemySkillIndex]?.[1]||0; else baseDamage=enemyCard.skills[enemySkillIndex]?.[1]||0;
+      let fearBoost=((enemyCard.id==='jujitae'&&enemyHp<enemyCard.hp)||String(state.traits?.[playerCard.id]||'').includes('두려움')||freeJujitaeBossMode&&freeJujitaePage===5&&freeJujitaeFearActive)?2:1;
+      const bossAtkValue=(jonggunBossMode||freeJujitaeBossMode||junGuBossMode||customBossMode)?enemyCard.atk:getBattleAtk(enemyCard);
+      let dmg=isAikido?baseDamage:(baseDamage*fearBoost+Math.floor(bossAtkValue*.22)-Math.floor(playerBattleDef*.07));
+      if(customBossMode&&customBossId==='jihongBoss'&&playerHp<enemyCard.hp){dmg+=3000;}
+      dmg=Math.max(0,Math.floor(dmg));
+      if(playerCard.id==='junseongX'&&playerDodgeLeft>0){playerDodgeLeft--;appendLog(`💨 ${playerCard.name}의 회피 발동! 공격을 확정 회피했습니다. (${playerDodgeLeft}회 남음)`);continue;}
+      if(playerCard.id==='transcendChoi'&&playerTranscendChoiInvulTurns>0){appendLog(`🪳 ${playerCard.name} 무적! 상대 공격을 무시했습니다.`);continue;}
+      if(playerCard.id==='immortalChoi'&&playerImmortalChoiReflectLeft>0){playerImmortalChoiReflectLeft--;enemyHp=Math.max(0,enemyHp-dmg);appendLog(`🔁 ${playerCard.name} 반사! ${dmg.toLocaleString()} 피해를 상대에게 돌려줬습니다.`);if(enemyHp<=0){finishPlayerVictory();return;}continue;}
+      if(playerCard.id==='meatShieldChoi'&&!playerMeatShieldUsed&&dmg>=playerHp){playerMeatShieldUsed=true;playerHp=1;appendLog(`🛡️ ${playerCard.name}의 특성 발동! 치명타를 맞고도 HP 1로 생존했습니다.`);continue;}
+      if(playerCard.id==='immortalSanguk'){enemyHp=Math.max(0,enemyHp-dmg);appendLog(`👑 지배의 권능 반사! ${dmg.toLocaleString()} 피해`);if(enemyHp<=0){finishPlayerVictory();return;}continue;}
+      playerHp=Math.max(0,playerHp-dmg);
+      appendLog(`상대 스킬 <b>${s?.[0]||'공격'}</b> → ${dmg.toLocaleString()} 피해${fearBoost===2?' ⚠️ 두려움 발동!':''}`); playSfx('hit');
+    }
+    if(playerCard.id==='transcendChoi'&&playerTranscendChoiInvulTurns>0)playerTranscendChoiInvulTurns--;
+    if(playerCard.id==='immortalSanguk'&&playerImmortalSangukSealTurns>0)playerImmortalSangukSealTurns=Math.max(0,playerImmortalSangukSealTurns-1);
+    if(playerCard.id==='immortalChoi'&&playerImmortalChoiReflectLeft<=0)playerImmortalChoiReflectLeft=0;
+    if(customBossMode&&customBossId==='meatMonsterChoi'&&customChoiShieldTurns>0)customChoiShieldTurns--;
+    turn++;
+    if(playerCard.id==='asuraOverlordJunseong'&&!playerRestUsed&&playerHp<=100000&&playerHp>0){playerHp=Math.min(playerBattleMaxHp,playerHp+40000);playerRestUsed=true;appendLog(`🛌 휴식 발동! HP +40,000`);}
+    if(playerHp<=0){
+      // 중2병 걸린 이승우: 다른 생존 캐릭터 1명을 희생하고 1회 부활
+      if(playerCard.id==='chuuniSeungwoo'&&!playerResurrectUsed){
+        const survivors=cards.filter(x=>x.id!=='chuuniSeungwoo'&&x.rarity!=='SECRET'&&ownedCount(x.id)>0&&getPersistentHp(x)>0);
+        if(survivors.length){
+          const victim=survivors[Math.floor(Math.random()*survivors.length)]; state.currentHp[victim.id]=0; playerHp=playerBattleMaxHp; playerResurrectUsed=true; state.currentHp[playerCard.id]=playerHp; appendLog(`🐉 흑염룡 폭주! ${victim.name}을(를) 희생하여 ${playerCard.name}이 부활했습니다.`); battleOver=false; save(); renderBattle(); return;
+        }
+      }
+      // transcend Seungwoo: sacrifice one other living owned character and revive.
+      if(playerCard.id==='transcendSeungwoo'){
+        const survivors=cards.filter(x=>x.id!=='transcendSeungwoo'&&x.rarity!=='SECRET'&&ownedCount(x.id)>0&&getPersistentHp(x)>0);
+        if(survivors.length){
+          const victim=survivors[Math.floor(Math.random()*survivors.length)]; state.currentHp[victim.id]=0; playerHp=playerBattleMaxHp; state.currentHp[playerCard.id]=playerHp; appendLog(`♻️ 흡수 발동! ${victim.name}의 생존을 대가로 ${playerCard.name}이 부활했습니다.`);
+          battleOver=false;save();renderBattle();return;
+        }
+      }
+      // transcend Choi death quest.
+      if(playerCard.id==='transcendChoi'){state.stats.transcendChoiDeaths++;checkSpecialQuests();}
+      // immortal Seungwoo one-time revival.
+      if(playerCard.id==='immortalSeungwoo'&&!playerImmortalSeungwooResurrectUsed){playerImmortalSeungwooResurrectUsed=true;playerHp=playerBattleMaxHp;appendLog(`♾️ ${playerCard.name}의 부활 발동!`);state.currentHp[playerCard.id]=playerHp;save();renderBattle();return;}
+      // transcend Sanguk one-time revival.
+      if(playerCard.id==='transcendSanguk'&&!playerTranscendSangukResurrected){playerTranscendSangukResurrected=true;playerHp=playerBattleMaxHp;appendLog(`🔁 ${playerCard.name}의 사망회귀 발동! 부활했습니다.`);state.currentHp[playerCard.id]=playerHp;save();renderBattle();return;}
+      // existing God / Shin revival.
+      if(!playerResurrectUsed&&(playerCard.id==='shinSeungwoo'||playerCard.id==='godJunseong')){playerResurrectUsed=true;playerHp=1;appendLog(`♻️ ${playerCard.name}의 부활 발동! HP 1로 재기.`);state.currentHp[playerCard.id]=playerHp;save();renderBattle();return;}
+      // immortal Sanguk infinite revival.
+      if(playerCard.id==='immortalSanguk'){playerHp=playerBattleMaxHp;appendLog(`👑 불사의 권능! ${playerCard.name}이(가) 무한히 부활했습니다.`);state.currentHp[playerCard.id]=playerHp;save();renderBattle();return;}
+      battleOver=true;state.currentHp[playerCard.id]=0;save();appendLog(`💀 ${playerCard.name}이(가) 쓰러졌습니다.`);
+    }else{state.currentHp[playerCard.id]=playerHp;save();}
+    playerActionsThisTurn=0;renderBattle(false);
+  },420);
+}
+
+function appendLog(t){const el=document.getElementById('battleLog');if(!el)return;const row=document.createElement('div');row.innerHTML=`• ${t}`;el.appendChild(row);el.scrollTop=el.scrollHeight}
+
+function burst(n){for(let i=0;i<n;i++){const p=document.createElement('div');p.className='particle';p.style.left=(50+Math.random()*16-8)+'vw';p.style.top=(45+Math.random()*16-8)+'vh';p.style.setProperty('--x',((Math.random()-.5)*650)+'px');p.style.setProperty('--y',((Math.random()-.5)*650)+'px');document.body.appendChild(p);setTimeout(()=>p.remove(),1200)}}
+let audioCtx=null, musicOn=false;
+function ensureAudio(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume()}
+function tone(freq,dur,type='sine',gain=.04){ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(gain,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur)}
+function playSfx(kind){try{if(kind==='pull'){tone(360,.08,'triangle',.05);setTimeout(()=>tone(540,.12,'triangle',.05),70)}else if(kind==='rare'){tone(220,.18,'sawtooth',.045);setTimeout(()=>tone(440,.18,'triangle',.05),130);setTimeout(()=>tone(880,.3,'sine',.045),250)}else if(kind==='hit'){tone(120,.06,'square',.035)}else if(kind==='bad'){tone(100,.12,'sawtooth',.05)}else if(kind==='win'){tone(523,.12,'triangle',.05);setTimeout(()=>tone(659,.14,'triangle',.05),120);setTimeout(()=>tone(784,.25,'triangle',.05),240)}}catch(e){}}
+function startMusic(){if(musicOn)return;musicOn=true;try{ensureAudio();const notes=[261.6,329.6,392,329.6,293.7,349.2,440,349.2];let i=0;setInterval(()=>{if(!musicOn)return;tone(notes[i++%notes.length],.22,'sine',.012)},520)}catch(e){}}
+['click','touchstart'].forEach(evt=>document.addEventListener(evt,()=>{if(!musicOn)startMusic()},{once:true}));
+
+setupFilters();renderFeatured();updateTop();renderRewards();renderBattleSelector(true);go('home');
+</script>
+</body>
+</html>
