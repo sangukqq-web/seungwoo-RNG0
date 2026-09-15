@@ -984,7 +984,7 @@ function checkJunGuQuests(){
 function grantWeaponLoot(enemyId){state.killsById[enemyId]=(state.killsById[enemyId]||0)+1;const r=Math.random();if(r<0.10){state.loot.heal=(state.loot.heal||0)+1;}if(enemyId==='jujitae'&&Math.random()<0.30)state.loot.fearStone=(state.loot.fearStone||0)+1;if(enemyId==='jon'&&Math.random()<0.15)state.loot.enhanceStone=(state.loot.enhanceStone||0)+1;if(enemyId==='shinSeungwoo'&&Math.random()<0.20)state.loot.fullRevive=(state.loot.fullRevive||0)+1;if(enemyId==='junseongX'&&Math.random()<0.30)state.loot.awakeningStone=(state.loot.awakeningStone||0)+1;if(enemyId==='godJunseong')state.loot.awakeningStone=(state.loot.awakeningStone||0)+1;}
 
 function startJunGuBossBattle(){
- bossMode=true;godBossMode=false;jonggunBossMode=false;junGuBossMode=true;jonggunPage=0;
+ bossMode=true;godBossMode=false;jonggunBossMode=false;freeJujitaeBossMode=false;junGuBossMode=true;customBossMode=false;customBossId=null;customChoiReflectLeft=0;customChoiShieldTurns=0;jonggunPage=0;
  const owned=cards.filter(c=>c.rarity!=='SECRET'&&ownedCount(c.id)>0&&getPersistentHp(c)>0); if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
  if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0)playerCard=cards.find(c=>c.id===state.selectedId);else{playerCard=owned[0];state.selectedId=playerCard.id;}
  enemyCard={id:'junGuBoss',name:'김준구 · 화랑검 김준구',rarity:'GOD BOSS',img:'assets/hwarang_junggu.png',hp:136000,atk:30000,def:30000,trait:'화랑검 5강 ×2',trait2:'상대 턴 5회 봉인 · 100% 치명타',trait3:'월광검 제 0 검식 · 사망 시 상대도 사망',skills:[['제 1검 초월(初月)',140000,0],['제 2검 현월(弦月)',144000,0],['제 3검 만월(滿月)',146000,0],['월광검 50검식',230000,0]],bossJunGu:true,customMaxLevel:200};
@@ -1242,14 +1242,16 @@ function loadFreeJujitaePage(page){
 }
 function startFreeJujitaeBossBattle(){
   // 자유의 주지태는 일반 주지태/일반 배틀과 완전히 분리된 전용 모드로 시작한다.
-  bossMode=true; godBossMode=false; jonggunBossMode=false; freeJujitaeBossMode=true; junGuBossMode=false; jonggunPage=0;
+  // 다른 전투에서 남은 최예강 보스 특성/모드와 이전 전투 HP를 이어받지 않는다.
+  bossMode=true; godBossMode=false; jonggunBossMode=false; freeJujitaeBossMode=true; junGuBossMode=false; customBossMode=false; customBossId=null; customChoiReflectLeft=0; customChoiShieldTurns=0; jonggunPage=0;
   freeJujitaePage=1; freeJujitaePage2ReviveUsed=false; freeJujitaePage4ReviveUsed=false;
   freeJujitaeDodgeLeft=0; freeJujitaeFearActive=false; freeJujitaeReverseLightUsed=false;
   const owned=cards.filter(c=>c.rarity!=='SECRET'&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
   if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
   if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
-  // 핵심 수정: 이전 일반 적 데이터를 절대 재사용하지 않고 PAGE 1 적을 강제로 로드한다.
+  // 핵심 수정: 이전 일반 적 데이터와 이전 전투 HP를 절대 재사용하지 않고 PAGE 1 적을 강제로 로드한다.
   resetEntryTraits(playerCard);
+  playerBattleAtk=getBattleAtk(playerCard); playerBattleDef=getBattleDef(playerCard); playerBattleMaxHp=getBattleHp(playerCard); playerHp=Math.min(getPersistentHp(playerCard),playerBattleMaxHp);
   loadFreeJujitaePage(1);
   document.getElementById('battleLog').innerHTML='';
   go('battle'); renderBattleSelector(true); renderBattle(true); appendLog('🩸 자유의 주지태 · GOD 보스전 시작! PAGE 1 → PAGE 5 · 클리어 보상 +40,000 코인 · +300,000 EXP');
@@ -1313,7 +1315,7 @@ function loadJonggunPage(page, revived=false){
   renderBattle();
 }
 function startJonggunBossBattle(){
-  bossMode=true; godBossMode=false; jonggunBossMode=true; freeJujitaeBossMode=false; junGuBossMode=false; jonggunPage=1; jonggunWhiteReviveUsed=false; jonggunYamazakiReviveUsed=false;
+  bossMode=true; godBossMode=false; jonggunBossMode=true; freeJujitaeBossMode=false; junGuBossMode=false; customBossMode=false; customBossId=null; customChoiReflectLeft=0; customChoiShieldTurns=0; jonggunPage=1; jonggunWhiteReviveUsed=false; jonggunYamazakiReviveUsed=false;
   const owned=cards.filter(c=>c.rarity!=='SECRET'&&ownedCount(c.id)>0&&getPersistentHp(c)>0);
   if(!owned.length){alert('사용 가능한 캐릭터가 없습니다.');go('collection');return;}
   if(state.selectedId&&ownedCount(state.selectedId)>0&&getPersistentHp(cards.find(c=>c.id===state.selectedId))>0) playerCard=cards.find(c=>c.id===state.selectedId); else {playerCard=owned[0];state.selectedId=playerCard.id;save();}
@@ -1481,7 +1483,15 @@ function useSkill(i){
   }else if(playerCard.id==='godJunseong'&&i===0){const copied=getSkillDamage(enemyCard,0);dmg=copied*2+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08);}
   else if(playerCard.id==='slyJuwan'&&i===0){dmg=getBattleHp(playerCard)+getBattleAtk(playerCard)+getBattleDef(playerCard);}
   else if(playerCard.id==='immortalSeungwoo'&&i===2){playerBattleAtk+=3000;specialAction=true;appendLog('💪 운동하기! 자신의 공격력이 3,000 증가했습니다.');}
-  else if(jonggunBossMode || freeJujitaeBossMode){dmg=s[1]||0;}
+  else if(jonggunBossMode || freeJujitaeBossMode){
+    if(playerCard.jungu){
+      // 페이지형 보스전에서도 김준구 계열은 장착 무기의 모든 스킬 추가 데미지를 적용한다.
+      dmg=getSkillDamage(playerCard,i)+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08);
+      if(!hasWeaponEquipped(playerCard)) dmg=0;
+    }else{
+      dmg=s[1]||0;
+    }
+  }
   else {dmg=getSkillDamage(playerCard,i)+Math.floor(playerBattleAtk*.25)-Math.floor(getBattleDef(enemyCard)*.08); if(playerCard.jungu&&!hasWeaponEquipped(playerCard)) dmg=0;}
 
   if(playerCard.id==='streetFighterSeungwoo'&&Math.random()<.05){playerBattleAtk=Math.floor(playerBattleAtk*1.1);appendLog('🥊 막싸움 발동! 공격력이 10% 증가했습니다.');}
