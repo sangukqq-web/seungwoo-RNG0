@@ -1421,7 +1421,7 @@ function renderSpecialQuests(){
     })()}`;
   const fishCount=Math.min(500,Number(state.fishDraws?.jeongtaegong||0));
   const fishAwakened=ownedCount('jeongtaegongAwakened')>0;
-  el.innerHTML += `<div class="panel" style="margin-top:10px"><div class="trait"><b>🐟 정태공 각성 · GOD</b><br>정태공의 물고기 뽑기를 500회 달성하면 정태공 각성으로 카드가 변경됩니다.<br>현재 진행도: ${fishCount} / 500<br><span style="color:var(--muted);font-size:10px">※ 물고기 확률 합계가 110%로 입력되어 있어 게임에서는 상대 가중치로 정규화해 적용됩니다.</span></div>${fishAwakened?`<div class="quest done"><div class="qicon">✅</div><div class="qbody"><b>정태공 각성 완료</b><span>정태공 각성 (GOD)을 획득했습니다.</span></div></div>`:''}</div>`;
+  el.innerHTML += `<div class="panel" style="margin-top:10px"><div class="trait"><b>🐟 정태공 각성 · GOD</b><br>정태공의 물고기 뽑기를 500회 달성하면 정태공 각성으로 카드가 변경됩니다.<br>현재 진행도: ${fishCount} / 500<br><span style="color:var(--muted);font-size:10px"></span></div>${fishAwakened?`<div class="quest done"><div class="qicon">✅</div><div class="qbody"><b>정태공 각성 완료</b><span>정태공 각성 (GOD)을 획득했습니다.</span></div></div>`:''}</div>`;
   const invOwned=ownedCount('invincibleSeungwoo')>0;
   const invQ1=Math.min(30,state.stats.chuuniBossWins);
   const invQ2=Math.min(30,state.stats.jihongBossWins);
